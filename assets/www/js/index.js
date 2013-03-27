@@ -67,8 +67,26 @@ $('#user-login').live( "pageshow", function(e) {
 				console.log("login ok!");
 				$.mobile.changePage( "interviews.html", { transition: "slide" });
 			} else {
-				$.mobile.showPageLoadingMsg("a", "Wrong password.", true);
+				$.mobile.showPageLoadingMsg("e", "Wrong password.", true);
 			}
 		});
+	});
+});
+
+$('#interview').live( "pagebeforeshow", function(e) {
+	$('#done').hide();
+	$('[type="submit"]').button('disable');
+});
+
+$('#interview').live( "pageshow", function(e) {
+	$('#start').click(function(){
+		$(this).hide();
+		$('#status').text("Started");
+		$('[type="submit"]').button('enable');
+		$('#done').show();
+	});
+	$('#done').click(function(){
+		$(this).hide();
+		$('#status').text("Done");
 	});
 });
