@@ -58,12 +58,11 @@ $('#user-login').live( "pageshow", function(e) {
 	//alert("pageshow");  
 	//alert(window.localStorage.getItem("domain"));
 	//alert(window.localStorage.getItem("port"));
+	var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/login";
 	$('#user-login-form').live('submit', function(e) {
 		var $this = $(this);
 		e.preventDefault();
-		//alert($('#username').val());
-		//alert($('#password').val());
-		$.post($this.attr('action'), $this.serialize(), function (responseData) {
+		$.post(action, $this.serialize(), function (responseData) {
 			if( responseData == "ok") {
 				alert("cool");
 			} else {
