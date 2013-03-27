@@ -37,7 +37,7 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-    	alert("device ready");
+    	console.log("device ready");
     }
 };
 
@@ -89,4 +89,45 @@ $('#interview').live( "pageshow", function(e) {
 		$(this).hide();
 		$('#status').text("Done");
 	});
+	
+	$('[type="submit"]').click(function(){
+		// Retrieve image file location from camera and save to album
+        navigator.camera.getPicture(uploadPhoto,
+                                    function(message) { alert('get picture failed'); },
+                                    { quality: 50, 
+                                    destinationType: navigator.camera.DestinationType.FILE_URI,
+                                    sourceType: Camera.PictureSourceType.CAMERA,
+                                    saveToPhotoAlbum: true }
+                                    );
+	});
 });
+
+function uploadPhoto(imageURI) {
+    var options = new FileUploadOptions();
+    options.fileKey="myfile";
+    options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+    options.mimeType="image/jpeg";
+
+    var params = {};
+    params.value1 = "test";
+    params.value2 = "param";
+
+    options.params = params;
+
+    var ft = new FileTransfer();
+    var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/upload";
+    ft.upload(imageURI, encodeURI(action), win, fail, options);
+}
+
+function win(r) {
+    console.log("Code = " + r.responseCode);
+    console.log("Response = " + r.response);
+    console.log("Sent = " + r.bytesSent);
+    $('#photo').text(r.response);
+}
+
+function fail(error) {
+    alert("An error has occurred: Code = " + error.code);
+    console.log("upload error source " + error.source);
+    console.log("upload error target " + error.target);
+}
