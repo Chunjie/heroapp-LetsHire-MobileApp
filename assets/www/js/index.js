@@ -51,11 +51,24 @@ $('#settings-form').live('submit', function(e) {
 	
 	window.localStorage.setItem(　"domain", $('#domain').val());
 	window.localStorage.setItem(　"port", $('#port').val());
-	$.mobile.changePage( "index.html", { transition: "slide" });
+	$.mobile.changePage( "login.html", { transition: "slide" });
 });
 
-$('#user-login').live( "pageshow", function( event, ui) {
-	alert("pageshow");  
+$('#user-login').live( "pageshow", function(e) {
+	//alert("pageshow");  
 	//alert(window.localStorage.getItem("domain"));
 	//alert(window.localStorage.getItem("port"));
+	$('#user-login-form').live('submit', function(e) {
+		var $this = $(this);
+		e.preventDefault();
+		//alert($('#username').val());
+		//alert($('#password').val());
+		$.post($this.attr('action'), $this.serialize(), function (responseData) {
+			if( responseData == "ok") {
+				alert("cool");
+			} else {
+				alert("responseData");
+			}
+		});
+	});
 });
