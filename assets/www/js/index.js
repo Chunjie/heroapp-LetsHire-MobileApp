@@ -64,9 +64,10 @@ $('#user-login').live( "pageshow", function(e) {
 		e.preventDefault();
 		$.post(action, $this.serialize(), function (responseData) {
 			if( responseData == "ok") {
-				alert("cool");
+				console.log("login ok!");
+				$.mobile.changePage( "interviews.html", { transition: "slide" });
 			} else {
-				alert("responseData");
+				$.mobile.showPageLoadingMsg("a", "Wrong password.", true);
 			}
 		});
 	});
