@@ -123,7 +123,8 @@ function win(r) {
     console.log("Code = " + r.responseCode);
     console.log("Response = " + r.response);
     console.log("Sent = " + r.bytesSent);
-    $('#photo').text(r.response);
+    var imgPath = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/images/";
+    $('#photo').text(imgPath + r.response);
 }
 
 function fail(error) {
