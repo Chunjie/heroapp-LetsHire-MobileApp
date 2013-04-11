@@ -43,23 +43,16 @@ var app = {
 
 app.initialize();
 
-$('#settings-form').live('submit', function(e) {
-	//var $this = $(this);
-	
-	//prevent the default submission of the form
+$('#settings-form').on('submit', function(e) {
 	e.preventDefault();
-	
-	window.localStorage.setItem(　"domain", $('#domain').val());
-	window.localStorage.setItem(　"port", $('#port').val());
-	$.mobile.changePage( "login.html", { transition: "slide" });
+	window.localStorage.setItem("domain", $('#domain').val() );
+	window.localStorage.setItem("port", $('#port').val() );
+	$.mobile.changePage( "index.html", { transition: "slide" });
 });
 
-$('#user-login').live( "pageshow", function(e) {
-	//alert("pageshow");  
-	//alert(window.localStorage.getItem("domain"));
-	//alert(window.localStorage.getItem("port"));
+$('#index').live( "pageshow", function(e) {
 	var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/login";
-	$('#user-login-form').live('submit', function(e) {
+	$('#user-login-form').on('submit', function(e) {
 		var $this = $(this);
 		e.preventDefault();
 		$.post(action, $this.serialize(), function (responseData) {
@@ -73,21 +66,10 @@ $('#user-login').live( "pageshow", function(e) {
 	});
 });
 
-$('#interview').live( "pagebeforeshow", function(e) {
-	$('#done').hide();
-	$('[type="submit"]').button('disable');
-});
-
 $('#interview').live( "pageshow", function(e) {
-	$('#start').click(function(){
-		$(this).hide();
+	$('#interview-action').click(function(){
 		$('#status').text("Started");
-		$('[type="submit"]').button('enable');
-		$('#done').show();
-	});
-	$('#done').click(function(){
-		$(this).hide();
-		$('#status').text("Done");
+		$(this).find(".ui-btn-text").text("Finish")
 	});
 	
 	$('[type="submit"]').click(function(){
@@ -102,22 +84,19 @@ $('#interview').live( "pageshow", function(e) {
 	});
 });
 
-function uploadPhoto(imageURI) {
-    var options = new FileUploadOptions();
-    options.fileKey="myfile";
-    options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-    options.mimeType="image/jpeg";
+$("#notes").live("pageshow", function(e) {
+    $(".note-item").on("taphold", function(e){
+	e.stopPropagation();
+	$("#noteItemMenu").popup("open");	
+    });    
+});
 
-    var params = {};
-    params.value1 = "test";
-    params.value2 = "param";
-
-    options.params = params;
-
-    var ft = new FileTransfer();
-    var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/upload";
-    ft.upload(imageURI, encodeURI(action), win, fail, options);
-}
+$("#note").live("pageshow", function(e) {
+    $(".attachment-item").on("taphold", function(e){
+	e.stopPropagation();
+	$("#attachmentItemMenu").popup("open");
+    }); 
+});
 
 function win(r) {
     console.log("Code = " + r.responseCode);
