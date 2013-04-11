@@ -1,39 +1,88 @@
 <!DOCTYPE html>
 <html>
+	<head>
+    	<title>Let's Hire</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+        
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />     
+        <link rel="stylesheet" type="text/css" href="themes/android-theme.css" />   
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        
+        <script type="text/javascript" src="cordova-2.5.0.js"></script>
+        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
+		<script type="text/javascript">
+			var DEBUG_ANDROID_THEME=true
+		</script>    
+		<script type="text/javascript" src="js/jquery.mobile.android-theme.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>  
+    </head>
     <body>
         <div id="interviews" data-role="page" data-theme="a">
-
-			<div data-role="header">
-				<a href="index.html" data-role="button" data-icon="home" rel="external">Home</a>
-				<h1>My Interviews(3)</h1>
-				<a href="settings.html" data-role="button" data-icon="gear">Settings</a>
+			<div data-role="header" data-position="fixed">
+				<a href="#userMenu" data-rel="popup"> Username </a>
+				<h1> My Interviews</h1>
+				<a class="ui-li-count ui-btn-up-c ui-btn-corner-all">3</a>
+				
 			</div><!-- /header -->
-		
+			
+			<div data-role="popup" id="userMenu">
+				<ul data-role="listview" data-inset="true">
+					<li data-role="divider"> Username </li>
+					<li data-corners="false" data-icon="arrow-r" data-iconpos="right">
+						<a href="settings.html">Settings</a>
+					</li>
+					<li data-corners="false" data-icon="arrow-r" data-iconpos="right">
+						<a href="#">Log out</a>
+					</li>
+				</ul>		
+			</div>
+			
 			<div data-role="content">
-				<ul data-role="listview">
+				<ul data-role="listview" data-theme="a" data-divider-theme="a" class="ui-listview">
+					<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-li-has-count">
+						"Some Day"
+						<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">2</span>
+					</li>
 					<li>
 						<a href="interview.html?id=1">
 							<p class="ui-li-aside ui-li-desc"><strong>6:24</strong>PM</p>
 							<h3 class="ui-li-heading">Avery Walker</h3>
-							<p class="ui-li-desc">at Room 203</p>
+							<p class="ui-li-desc"><strong>candidate for Sr. MTS</strong>  at Room 203</p>
 						</a>
 					</li>
 					<li>
 						<a href="interview.html?id=1">
 							<p class="ui-li-aside ui-li-desc"><strong>6:24</strong>PM</p>
 							<h3 class="ui-li-heading">Mike Taylor</h3>
-							<p class="ui-li-desc">at Room 203</p>
+							<p class="ui-li-desc"><strong>candidate for MTS</strong>  at Room 203</p>
 						</a>
+					</li>
+					<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-li-has-count">
+						"Some Day"
+						<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">1</span>
 					</li>
 					<li>
 						<a href="interview.html?id=1">
 							<p class="ui-li-aside ui-li-desc"><strong>6:24</strong>PM</p>
 							<h3 class="ui-li-heading">Angela Smith</h3>
-							<p class="ui-li-desc">at Room 203</p>
+							<p class="ui-li-desc"><strong>candidate for HR</strong>  at Room 203</p>
 						</a>
 					</li>
 				</ul>
 			</div><!-- /content -->
+			
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="interviews.html" data-icon="refresh" data-iconpos="top">Refresh</a></li>
+						<li><a href="settings.html" data-icon="gear" data-iconpos="top">Settings</a></li>
+					</ul>
+				</div>		
+			</div>
+			
 		</div><!-- /page -->
     </body>
 </html>

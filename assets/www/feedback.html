@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-	<head>
+    <head>
     	<title>Let's Hire</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="format-detection" content="telephone=no" />
@@ -20,33 +20,28 @@
 		<script type="text/javascript" src="js/index.js"></script>  
     </head>
     <body>
-        <div id="interview" data-role="page" data-theme="a">
+        <div id="feedback" data-role="page" data-theme="a">
 
-			<div data-role="header"  data-position="fixed">
-				<a href="interviews.html" data-role="button" data-icon="arrow-l" class="">Back</a>
-				<h1>Interview Details</h1>	
-				<a href="feedback.html" data-role="button" data-icon="star">Feedback</a>				
+			<div data-role="header" data-position="fixed">
+				<a href="interview.html" data-role="button" data-icon="arrow-l">Back</a>
+				<h1>Feedback</h1>
 			</div><!-- /header -->
 		
-			<div data-role="content">	
-		            <h2>Avery Walker</h2>
-		            <h5>11:30Am @ Room 203</h5>
-		            <h5>Applying for Sr.MTS position.</h5>
-		            <h5>Current Status: <span id="status" style="color:yellow;">Not Yet Start</span></h5>
-		            <span id="photo"></span>
-		            <input type="submit" value="Attach Whiteboard Photo" data-mini="true"/><!-- to disable -->
-		            <br>
+			<div data-role="content">
+				<form id="user-feedback">
+					<textarea type="text" name="feedback" id="feedback" >some overall comments</textarea>
+					<fieldset class="ui-grid-a">
+					    <div class="ui-block-a"><a href="interviews.html" data-role="button">Cancel</a></div>
+					    <div class="ui-block-b"><input type="submit" value="Save"/></div>        
+					</fieldset>
+				</form>	
 			</div><!-- /content -->
-			
 			<div data-role="footer" data-position="fixed">
 				<div data-role="navbar">
 					<ul>
-						<li><a id="interview-action" href="#" data-icon="arrow-r">Start</a></li>
-						<li><a id="interview-newnote" href="note.html" data-icon="plus">New Note</a></li>
-						<li><a id="interview-notes" href="notes.html" data-icon="grid">Notes</a></li>
-						<li><a href="settings.html" data-icon="gear">Settings</a></li>
+						<li><a href="settings" data-icon="gear" data-iconpos="top">Setup</a></li>
 					</ul>
-				</div>
+				</div>	
 			</div>
 		</div><!-- /page -->
     </body>
