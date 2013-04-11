@@ -50,7 +50,7 @@ $('#settings-form').on('submit', function(e) {
 	$.mobile.changePage( "index.html", { transition: "slide" });
 });
 
-$('#index').live( "pageshow", function(e) {
+$(document).on( "pageshow", "#index", function(e) {
 	var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/login";
 	$('#user-login-form').on('submit', function(e) {
 		var $this = $(this);
@@ -66,7 +66,7 @@ $('#index').live( "pageshow", function(e) {
 	});
 });
 
-$('#interview').live( "pageshow", function(e) {
+$(document).on( "pageshow", "#interview", function(e) {
 	$('#interview-action').click(function(){
 		$('#status').text("Started");
 		$(this).find(".ui-btn-text").text("Finish")
@@ -84,14 +84,14 @@ $('#interview').live( "pageshow", function(e) {
 	});
 });
 
-$("#notes").live("pageshow", function(e) {
+$(document).on("pageshow", "#notes", function(e) {
     $(".note-item").on("taphold", function(e){
 	e.stopPropagation();
 	$("#noteItemMenu").popup("open");	
     });    
 });
 
-$("#note").live("pageshow", function(e) {
+$(document).on("pageshow", "#note", function(e) {
     $(".attachment-item").on("taphold", function(e){
 	e.stopPropagation();
 	$("#attachmentItemMenu").popup("open");

@@ -2,3 +2,5 @@
 .settings
 .project
 bin/dexedLibs/*.jar
+*.apk
+*.ap_
