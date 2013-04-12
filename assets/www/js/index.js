@@ -72,6 +72,11 @@ $(document).on( "pageshow", "#interview", function(e) {
 		$(this).find(".ui-btn-text").text("Finish")
 	});
 	
+	$(".interviewNoteItem").on("taphold", function(e){
+	    e.stopPropagation();
+	    $("#interviewNoteMenu").popup("open");    
+	});
+	
 	$('[type="submit"]').click(function(){
 		// Retrieve image file location from camera and save to album
         navigator.camera.getPicture(uploadPhoto,
