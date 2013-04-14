@@ -73,20 +73,9 @@ $(document).on( "pageshow", "#interview", function(e) {
 	});
 	
 	$(".interviewNoteItem").on("taphold", function(e){
-	    e.stopPropagation();
 	    $("#interviewNoteMenu").popup("open");    
 	});
 	
-	$('[type="submit"]').click(function(){
-		// Retrieve image file location from camera and save to album
-        navigator.camera.getPicture(uploadPhoto,
-                                    function(message) { alert('get picture failed'); },
-                                    { quality: 50, 
-                                    destinationType: navigator.camera.DestinationType.FILE_URI,
-                                    sourceType: Camera.PictureSourceType.CAMERA,
-                                    saveToPhotoAlbum: true }
-                                    );
-	});
 });
 
 $(document).on("pageshow", "#notes", function(e) {
@@ -100,8 +89,35 @@ $(document).on("pageshow", "#note", function(e) {
     $(".attachment-item").on("taphold", function(e){
 	e.stopPropagation();
 	$("#attachmentItemMenu").popup("open");
-    }); 
+    });
+    
+    $(".attachPhotoAction").click(function(){
+	navigator.camera.getPicture(uploadPhoto,
+                                    function(message) { alert('get picture failed'); },
+                                    { quality: 50, 
+                                    destinationType: navigator.camera.DestinationType.FILE_URI,
+                                    sourceType: Camera.PictureSourceType.CAMERA,
+                                    saveToPhotoAlbum: true }
+                                    );
+    });
 });
+
+function uploadPhoto(imageURI) {
+    var options = new FileUploadOptions();
+    options.fileKey="myfile";
+    options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+    options.mimeType="image/jpeg";
+
+    var params = {};
+    params.value1 = "test";
+    params.value2 = "param";
+
+    options.params = params;
+
+    var ft = new FileTransfer();
+    var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/upload";
+    ft.upload(imageURI, encodeURI(action), win, fail, options);
+}
 
 function win(r) {
     console.log("Code = " + r.responseCode);
