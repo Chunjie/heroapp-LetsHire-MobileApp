@@ -26,18 +26,18 @@
 				<h1>Settings</h1>
 			</div><!-- /header -->
 		
-			<div data-role="content">	
-	            <form id="settings-form" data-ajax="false" action="#">
-	                <label for="domain">Server:</label>
-	                <input type="text" name="domain" id="domain" value="lets-hire.cloudfoundry.com" placeholder="letshire.abc.com"/>
-	                <label for="port">Port:</label>
-	                <input type="text" name="port" id="port" value="80" placeholder="3000"/>
-	                <fieldset class="ui-grid-a">
-	                	<div class="ui-block-a"><a href="index.html" data-role="button" data-transition="slide">Cancel</a></div>
-	                	<div class="ui-block-b"><input type="submit" value="Save" data-transition="slide"/></div>
-	                </fieldset>
-	                
-	            </form>
+			<div data-role="content">
+			    <label id="connect_status" style="display: none">Checking Connectability ... </label>
+				<form id="settings-form">
+				    <label for="domain">Server:</label>
+				    <input type="text" name="domain" id="domain" placeholder="letshire.abc.com"/>
+				    <label for="port">Port:</label>
+				    <input type="text" name="port" id="port" placeholder="3000"/>
+				    <fieldset class="ui-grid-a">
+					    <div class="ui-block-a"><a href="index.html" data-role="button" data-transition="slide">Cancel</a></div>
+					    <div class="ui-block-b"><a href="#" data-role="button" id="setting-save" data-transition="slide">Save</a></div>
+				    </fieldset>
+				</form>
 			</div><!-- /content -->
 
 		</div><!-- /page -->

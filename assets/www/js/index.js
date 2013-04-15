@@ -43,26 +43,46 @@ var app = {
 
 app.initialize();
 
-$('#settings-form').on('submit', function(e) {
-	e.preventDefault();
-	window.localStorage.setItem("domain", $('#domain').val() );
-	window.localStorage.setItem("port", $('#port').val() );
-	$.mobile.changePage( "index.html", { transition: "slide" });
+var G = {
+    current_user: "",
+}
+
+$(document).on( "pageshow", "#settings", function(e) {
+	$('#setting-save').on('click', function(e) {
+	    e.preventDefault();
+	    $("#connect_status").text("Check connectability ...").show();
+	    console.log("here");
+	    $.getJSON(full_url("heartbeats"), {
+		format: "json"
+	    })
+	    .done(function(data) {
+		if ( data['ret'] == 'ok'){
+		    window.localStorage.setItem("domain", $('#domain').val() );
+		    window.localStorage.setItem("port", $('#port').val() );    
+		    $.mobile.changePage( "index.html", { transition: "slide" });
+		    $("#connect_status").hide();
+		}
+	    })
+	});
 });
 
 $(document).on( "pageshow", "#index", function(e) {
-	var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/login";
+
 	$('#user-login-form').on('submit', function(e) {
 		var $this = $(this);
 		e.preventDefault();
-		$.post(action, $this.serialize(), function (responseData) {
-			if( responseData == "ok") {
-				console.log("login ok!");
-				$.mobile.changePage( "interviews.html", { transition: "slide" });
-			} else {
-				$.mobile.showPageLoadingMsg("e", "Wrong password.", true);
-			}
-		});
+		username = $("input#username").val();
+		password = $("input#password").val();
+		form_data = {"user": {"email": username, "password": password}};
+		$.ajax({
+		    type: "POST",
+		    dataType: "jsonp",
+		    data: form_data,
+		    url: full_url('users/sign_in'),
+		    success: function(data){
+			$.mobile.navigate("#interviews")   
+		    }
+		}); 
 	});
 });
 
@@ -76,30 +96,23 @@ $(document).on( "pageshow", "#interview", function(e) {
 	    $("#interviewNoteMenu").popup("open");    
 	});
 	
-});
-
-$(document).on("pageshow", "#notes", function(e) {
-    $(".note-item").on("taphold", function(e){
-	e.stopPropagation();
-	$("#noteItemMenu").popup("open");	
-    });    
-});
-
-$(document).on("pageshow", "#note", function(e) {
-    $(".attachment-item").on("taphold", function(e){
-	e.stopPropagation();
-	$("#attachmentItemMenu").popup("open");
-    });
-    
-    $(".attachPhotoAction").click(function(){
+	$(".attachPhotoAction").click(function(){
 	navigator.camera.getPicture(uploadPhoto,
-                                    function(message) { alert('get picture failed'); },
-                                    { quality: 50, 
-                                    destinationType: navigator.camera.DestinationType.FILE_URI,
-                                    sourceType: Camera.PictureSourceType.CAMERA,
-                                    saveToPhotoAlbum: true }
-                                    );
+	    function(message) { alert('get picture failed'); },
+	    { quality: 50, 
+	    destinationType: navigator.camera.DestinationType.FILE_URI,
+	    sourceType: Camera.PictureSourceType.CAMERA,
+	    saveToPhotoAlbum: true }
+	);
     });
+});
+
+$(document).on( "pageshow", "#feedback", function(e) {
+    
+});
+
+$(document).on( "pageshow", "#candidate", function(e) {
+    
 });
 
 function uploadPhoto(imageURI) {
@@ -117,6 +130,11 @@ function uploadPhoto(imageURI) {
     var ft = new FileTransfer();
     var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/upload";
     ft.upload(imageURI, encodeURI(action), win, fail, options);
+}
+
+function full_url( path ) {
+    ret = "http://127.0.0.1:3000/" + path + ".js?callback=?"  ;
+    return ret;
 }
 
 function win(r) {
