@@ -51,7 +51,6 @@ $(document).on( "pageshow", "#settings", function(e) {
 	$('#setting-save').on('click', function(e) {
 	    e.preventDefault();
 	    $("#connect_status").text("Check connectability ...").show();
-	    console.log("here");
 	    $.getJSON(full_url("heartbeats"), {
 		format: "json"
 	    })
@@ -68,21 +67,44 @@ $(document).on( "pageshow", "#settings", function(e) {
 
 $(document).on( "pageshow", "#index", function(e) {
 
-	$('#user-login-form').on('submit', function(e) {
+	$('#log-in-button').on('click', function(e) {
 		var $this = $(this);
 		e.preventDefault();
+		$("#user-login-status").text("Connecting ... ").show();
 		username = $("input#username").val();
 		password = $("input#password").val();
 		form_data = {"user": {"email": username, "password": password}};
+		
 		$.ajax({
+		    dataType: "json",
+		    url: full_url("users/sign_in"),
+		    processData: false,
+		    contentType: "application/json",
+		    data: JSON.stringify(form_data),
 		    type: "POST",
-		    dataType: "jsonp",
-		    data: form_data,
-		    url: full_url('users/sign_in'),
-		    success: function(data){
-			$.mobile.navigate("#interviews")   
+		    success: function(response_data){
+			if(response_data['ret'] == 'Success'){
+			    $("#user-login-status").hide();
+			    user_id = response_data['user']['id'];
+			    G.current_user = user_id;
+			    $.mobile.changePage("interviews.html");
+			}else{
+			    $("#user-login-status").hide();
+			    alert("Login Failed ... ");
+			}
+		    },
+		    error: function(){
+		    	$("#user-login-status").hide();
+		    	alert("Error logging in !");
 		    }
-		}); 
+		});
+	});
+});
+
+$(document).on("pageshow", "#interviews", function(e){
+	$("#log-out-button").click(function(){
+	    $.mobile.changePage("index.html", {transition: "slide"});
+	    G.current_user = null;
 	});
 });
 
@@ -133,7 +155,7 @@ function uploadPhoto(imageURI) {
 }
 
 function full_url( path ) {
-    ret = "http://127.0.0.1:3000/" + path + ".js?callback=?"  ;
+    ret = "http://letshire-dev-yuan.cloudfoundry.com/" + path + ".json"  ;
     return ret;
 }
 

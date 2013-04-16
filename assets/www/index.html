@@ -11,8 +11,8 @@
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         
         <script type="text/javascript" src="cordova-2.5.0.js"></script>
-        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+		<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.js"></script>
 		<script type="text/javascript">
 			var DEBUG_ANDROID_THEME=true
 		</script>    
@@ -27,13 +27,13 @@
 			</div><!-- /header -->
 		
 			<div data-role="content">
+				<label id="user-login-status" style="display: none">Connecting ... </label>
 				<form id="user-login-form">
 					<label for="username">Username:</label>
-					<input type="text" name="username" id="username" value="username"/>
+					<input type="text" name="username" id="username" placeholder='admin@local.com'/>
 					<label for="password">Password:</label>
 					<input type="password" name="password" id="password" />
-					<!-- <input type="submit" value="Log in" action="interviews.html"/> -->
-					<a href="interviews.html" data-role="button"> Log in </a>
+					<a data-role="button" data-ajax="false" data-rel="external" id="log-in-button">Sign in</a>
 				</form>	
 			</div><!-- /content -->
 			<div data-role="footer" data-position="fixed">
