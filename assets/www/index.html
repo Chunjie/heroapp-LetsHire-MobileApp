@@ -6,13 +6,13 @@
         <meta name="format-detection" content="telephone=no" />
         <meta name="viewport" content=", width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />
         
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />     
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />     
         <link rel="stylesheet" type="text/css" href="themes/android-theme.css" />   
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         
         <script type="text/javascript" src="cordova-2.5.0.js"></script>
         <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
-		<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.js"></script>
+		<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.js"></script>
 		<script type="text/javascript">
 			var DEBUG_ANDROID_THEME=true
 		</script>    
@@ -24,6 +24,7 @@
 
 			<div data-role="header" data-position="fixed">
 				<h1>Let's Hire</h1>
+				<a id="index-other" href="#index-popup-menu" data-rel="popup" class="ui-btn-right"> III </a>
 			</div><!-- /header -->
 		
 			<div data-role="content">
@@ -33,16 +34,18 @@
 					<input type="text" name="username" id="username" placeholder='admin@local.com'/>
 					<label for="password">Password:</label>
 					<input type="password" name="password" id="password" />
-					<a data-role="button" data-ajax="false" data-rel="external" id="log-in-button">Sign in</a>
+					<a id="log-in-button" data-role="button" data-ajax="false" data-rel="external" >Log in</a>
 				</form>	
 			</div><!-- /content -->
-			<div data-role="footer" data-position="fixed">
-				<div data-role="navbar">
-					<ul>
-						<li><a href="settings.html" data-icon="gear" data-iconpos="top">Settings</a></li>
-					</ul>
-				</div>	
+			
+			<div id="index-popup-menu" data-role="popup" data-theme="d">
+				<ul data-role="listview" data-inset="true" style="min-width: 210px;" data-theme="d">
+					<li data-role="divider" data-theme="e">Options</li>
+					<li><a href="settings.html">Settings</a></li>
+					<li><a href="about.html">About</a></li>
+				</ul>	
 			</div>
+			
 		</div><!-- /page -->
     </body>
 </html>

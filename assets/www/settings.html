@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
-	<head>
+    <head>
     	<title>Let's Hire</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+        <meta name="viewport" content=", width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />
         
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />     
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />     
         <link rel="stylesheet" type="text/css" href="themes/android-theme.css" />   
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         
         <script type="text/javascript" src="cordova-2.5.0.js"></script>
-        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+		<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.js"></script>
 		<script type="text/javascript">
 			var DEBUG_ANDROID_THEME=true
 		</script>    
@@ -21,27 +21,31 @@
     </head>
     <body>
         <div id="settings" data-role="page" data-theme="c">
-
-			<div data-role="header" data-position="fixed">
-				<h1>Settings</h1>
-			</div><!-- /header -->
-		
+			<div data-role="header">
+				<a id="settings-back" data-role="button" data-icon="arrow-l">Back</a>
+				<h1>Settings</h1>	
+			</div>
+			
 			<div data-role="content">
-			    <label id="connect_status" style="display: none">Checking Connectability ... </label>
-				<form id="settings-form">
-				    <label for="domain">Server:</label>
-				    <input type="text" name="domain" id="domain" placeholder="letshire.abc.com"/>
-				    <label for="port">Port:</label>
-				    <input type="text" name="port" id="port" placeholder="3000"/>
-				    <fieldset class="ui-grid-a">
-					    <div class="ui-block-a"><a href="index.html" data-role="button" data-transition="slide">Cancel</a></div>
-					    <div class="ui-block-b"><a href="#" data-role="button" id="setting-save" data-transition="slide">Save</a></div>
-				    </fieldset>
-				</form>
-			</div><!-- /content -->
-
+				<label id="connectability" style="display: none"> Connecting the server ... </label>
+				
+				<div>
+					<label for="domain">
+						Server Address:
+					</label>
+					<input type="text" id="settings-domain"/>
+					<label for="port">
+						Port:
+					</label>
+					<input type="text" id="settings-port"/>
+					<fieldset class="ui-grid-a">
+						<div class="ui-block-a"><button id="settings-cancel">Cancel</button></div>
+						<div class="ui-block-b"><button id="settings-save">Save</button></div>
+					</fieldset>	
+				</div>
+				
+			</div>
+			
 		</div><!-- /page -->
-        
     </body>
 </html>
-

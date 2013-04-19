@@ -108,34 +108,6 @@ $(document).on("pageshow", "#interviews", function(e){
 	});
 });
 
-$(document).on( "pageshow", "#interview", function(e) {
-	$('#interview-action').click(function(){
-		$('#status').text("Started");
-		$(this).find(".ui-btn-text").text("Finish")
-	});
-	
-	$(".interviewNoteItem").on("taphold", function(e){
-	    $("#interviewNoteMenu").popup("open");    
-	});
-	
-	$(".attachPhotoAction").click(function(){
-	navigator.camera.getPicture(uploadPhoto,
-	    function(message) { alert('get picture failed'); },
-	    { quality: 50, 
-	    destinationType: navigator.camera.DestinationType.FILE_URI,
-	    sourceType: Camera.PictureSourceType.CAMERA,
-	    saveToPhotoAlbum: true }
-	);
-    });
-});
-
-$(document).on( "pageshow", "#feedback", function(e) {
-    
-});
-
-$(document).on( "pageshow", "#candidate", function(e) {
-    
-});
 
 function uploadPhoto(imageURI) {
     var options = new FileUploadOptions();
