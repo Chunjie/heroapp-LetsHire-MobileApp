@@ -56,18 +56,18 @@
 			<div data-role="footer" data-position="fixed">
 				<div data-role="navbar" data-grid="a">
 					<ul>
-						<li><a data-icon="refresh">Refresh</a></li>
-						<li><a data-icon="right">Current Interview</a></li>
+						<li><a id="interviews-refresh" data-icon="refresh" data-rel="external" data-ajax="false">Refresh</a></li>
+						<li><a id="interviews-to-current" data-icon="right" data-rel="external" data-ajax="false">Current Interview</a></li>
 					</ul>
 				</div>	
 			</div>
 			
 			<div id="interviews-menu-panel" data-role="panel">
 				<ul data-role="listview" data-theme="b">
-					<li><a href="#">Today</a></li>
-					<li><a href="#">This Week</a></li>
-					<li><a href="#">This Month</a></li>
-					<li><a href="#">Log out</a></li>
+					<li><a id="interviews-today" class="interviews-interval" data-ajax="false" data-rel="external">Today</a></li>
+					<li><a id="interviews-week" class="interviews-interval" data-ajax="false" data-rel="external">This Week</a></li>
+					<li><a id="interviews-month" class="interview-interval" data-ajax="false" data-rel="external">This Month</a></li>
+					<li><a id="user-log-out" data-ajax="false" data-rel="external">Log out</a></li>
 				</ul>
 			</div>
 			

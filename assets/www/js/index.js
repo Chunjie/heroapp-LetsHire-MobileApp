@@ -43,68 +43,106 @@ var app = {
 
 app.initialize();
 
+// GLOBAL VARIABLE
 var G = {
     current_user: "",
+	auth_token: ""
 }
 
-$(document).on( "pageshow", "#settings", function(e) {
-	$('#setting-save').on('click', function(e) {
-	    e.preventDefault();
-	    $("#connect_status").text("Check connectability ...").show();
-	    $.getJSON(full_url("heartbeats"), {
-		format: "json"
-	    })
-	    .done(function(data) {
-		if ( data['ret'] == 'ok'){
-		    window.localStorage.setItem("domain", $('#domain').val() );
-		    window.localStorage.setItem("port", $('#port').val() );    
-		    $.mobile.changePage( "index.html", { transition: "slide" });
-		    $("#connect_status").hide();
-		}
-	    })
-	});
-});
+// CONFIGURATION
+var C = {
+	api_prefix: "http://letshire-dev-yuan.cloudfoundry.com/api/v1/"
+}
 
+// ACTION PATH MAPPINGS
+var A = {
+	log_in: "login",
+	log_out: "logout",
+	test_connect: "test"
+}
+
+// Error Messages
+var E = {
+	login: "Error logging in !"
+}
+
+// API URL BUILDER
+function api_url( path ){
+	var ret = CONFIG.api_prefix + path + ".json";  
+	return ret;
+}
+
+// Index page: login
 $(document).on( "pageshow", "#index", function(e) {
-
-	$('#log-in-button').on('click', function(e) {
-		var $this = $(this);
+	$("log-in-button").on("click", function(e){
 		e.preventDefault();
-		$("#user-login-status").text("Connecting ... ").show();
-		username = $("input#username").val();
-		password = $("input#password").val();
-		form_data = {"user": {"email": username, "password": password}};
+		$("user-login-status").text(" Connecting ... ").show();
+		var username = $("input#username").val();
+		var password = $("input#password").val();
+		var form_data = {"user":{"email":username, "password":password}};
 		
 		$.ajax({
-		    dataType: "json",
-		    url: full_url("users/sign_in"),
-		    processData: false,
-		    contentType: "application/json",
-		    data: JSON.stringify(form_data),
-		    type: "POST",
-		    success: function(response_data){
-			if(response_data['ret'] == 'Success'){
-			    $("#user-login-status").hide();
-			    user_id = response_data['user']['id'];
-			    G.current_user = user_id;
-			    $.mobile.changePage("interviews.html");
-			}else{
-			    $("#user-login-status").hide();
-			    alert("Login Failed ... ");
+			dataType: "json",
+			url: api_url(A.log_in),
+			processData: false,
+			contentType: "application/json",
+			data: JSON.stringify(form_data),
+			type: "POST",
+			success: function(response_data){
+				$("#user-login-status").hide();
+				user_id = response_data;
+				// TODO: do something for logged in user
+				$.mobile.change("interviews.html");
+			},
+			error: function(){
+				$("#user-login-status").hide();
+				alert(E.login)
 			}
-		    },
-		    error: function(){
-		    	$("#user-login-status").hide();
-		    	alert("Error logging in !");
-		    }
+		});
+	});	
+});
+
+$(document).on( "pageshow", "#settings", function(e) {
+	$("#settings-save").on("click", function(e){
+		$("#connectablity").text("Checking connectability ... ").show();
+		$.ajax({
+			type: "GET",
+			url: api_url(A.test_connect),
+			success: function(responseData){
+				// TODO: do something 	
+			}
 		});
 	});
 });
 
 $(document).on("pageshow", "#interviews", function(e){
-	$("#log-out-button").click(function(){
-	    $.mobile.changePage("index.html", {transition: "slide"});
-	    G.current_user = null;
+	$("#user-log-out").on("click", function(e){
+		// TODO:
+	});
+	
+	$(".interviews-interval").on("click", function(e){
+		// TODO:
+	});
+	
+	$("#interviews-to-current").on("click", function(e){
+		// TODO:
+	});
+	
+	$("#interviews-refresh").on("click", function(e){
+		// TODO:
+	});
+});
+
+$(document).on("pageshow", "#interview", function(e){
+	// TODO:
+});
+
+$(document).on("pageshow", "#feedback", function(e){
+	$("#feedback-save").on("click", function(e){
+		var feedback_content = $("#feedback-content").val();
+		$.ajax({
+			// TODO:
+		});
 	});
 });
 
