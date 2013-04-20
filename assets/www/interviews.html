@@ -22,13 +22,35 @@
     <body>
         <div id="interviews" data-role="page" data-theme="c">
 			<div data-role="header">
-				<a id="interviews-user" data-role="button" href="#interviews-popup-menu" data-rel="popup">yuanzhuang@vmware.com</a>
+				<a id="interviews-user" data-role="button" href="#interviews-menu-panel">yuanzhuang@vmware.com</a>
 				<h1>Interviews</h1>
 				<a data-role="button" href="#interviews-settings" data-rel="popup"> III </a>
 			</div>
 			
 			<div data-role="content">
-				<h1>TODO: Interviews List</h1>		
+				<ul data-role="listview">
+					<li>
+						<a href="interview.html">
+							<h2>Candidate Name</h2>
+							<p><strong>Candidate for Sr. MTS, Room 203</strong></p>
+							<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+						</a>
+					</li>
+					<li>
+						<a href="interview.html">
+							<h2>Candidate Name</h2>
+							<p><strong>Candidate for Sr. MTS, Room 203</strong></p>
+							<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+						</a>
+					</li>
+					<li>
+						<a href="interview.html">
+							<h2>Candidate Name</h2>
+							<p><strong>Candidate for Sr. MTS, Room 203</strong></p>
+							<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+						</a>
+					</li>
+				</ul>		
 			</div>
 			
 			<div data-role="footer" data-position="fixed">
@@ -40,14 +62,13 @@
 				</div>	
 			</div>
 			
-			<div id="interviews-popup-menu" data-role="popup">
-				<ul data-role="listview" data-inset="true" style="min-width: 210px;" data-theme="d">
-					<li data-role="divider" data-theme="e">Options</li>
+			<div id="interviews-menu-panel" data-role="panel">
+				<ul data-role="listview" data-theme="b">
 					<li><a href="#">Today</a></li>
 					<li><a href="#">This Week</a></li>
 					<li><a href="#">This Month</a></li>
 					<li><a href="#">Log out</a></li>
-				</ul>		
+				</ul>
 			</div>
 			
 			<div id="interviews-settings" data-role="popup" data-theme="d">
