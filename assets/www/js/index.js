@@ -46,7 +46,7 @@ app.initialize();
 // GLOBAL VARIABLE
 var G = {
     current_user: "",
-	auth_token: ""
+	auth_token: null
 }
 
 // CONFIGURATION
@@ -93,8 +93,7 @@ $(document).on( "pageshow", "#index", function(e) {
 			type: "POST",
 			success: function(response_data){
 				$("#user-login-status").hide();
-				user_id = response_data;
-				// TODO: do something for logged in user
+				G.auth_token = response_data['auth_token'];
 				$.mobile.change("interviews.html");
 			},
 			error: function(){
@@ -106,6 +105,7 @@ $(document).on( "pageshow", "#index", function(e) {
 });
 
 $(document).on( "pageshow", "#settings", function(e) {
+	// checking whether the server that domain and port pair indicate be reached 
 	$("#settings-save").on("click", function(e){
 		$("#connectablity").text("Checking connectability ... ").show();
 		$.ajax({
@@ -119,8 +119,15 @@ $(document).on( "pageshow", "#settings", function(e) {
 });
 
 $(document).on("pageshow", "#interviews", function(e){
+	// when user log out, the auth_token will be erased from app.
 	$("#user-log-out").on("click", function(e){
-		// TODO:
+		$.ajax({
+			type: "GET",
+			url: api_url(A.log_out),
+		}).done(function(e){
+			G.auth_token = null;
+			$.mobile.change("index.html");
+		});
 	});
 	
 	$(".interviews-interval").on("click", function(e){
