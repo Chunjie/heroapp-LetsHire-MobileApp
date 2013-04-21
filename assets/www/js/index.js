@@ -58,6 +58,9 @@ var C = {
 var A = {
 	log_in: "login",
 	log_out: "logout",
+	interviews: "interviews",
+	interview: "interview",
+	
 	test_connect: "test"
 }
 
