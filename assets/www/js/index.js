@@ -46,7 +46,7 @@ app.initialize();
 // GLOBAL VARIABLE
 var G = {
     current_user: "",
-	auth_token: null
+	auth_token: ""
 }
 
 // CONFIGURATION
@@ -66,13 +66,39 @@ var A = {
 
 // Error Messages
 var E = {
-	login: "Error logging in !"
+	timeout: "Time out",
+	abort: "Abort",
+	no_network: "Not connect, verify your network",
+	not_found: "Requested Resource Not Found",
+	parse: "JSON parser error",
+	unknown: "Unknown Error",
+	internal: {
+		login: "Log in failed ... "
+	}
 }
 
 // API URL BUILDER
 function api_url( path ){
-	var ret = CONFIG.api_prefix + path + ".json";  
+	var ret = CONFIG.api_prefix + path + ".json?user_id="+ G.current_user;  
 	return ret;
+}
+
+// this method should be called in each error handler if you want to popup
+// something.
+function error_alert(jqXHR, status, error_info){
+	if( jqXHR.status === 0 ){
+		alert(E.no_network);	
+	}else if( jqXHR.status == 404 ){
+		alert(E.not_found);
+	}else if( jqXHR.status == 500 ){
+		alert(error_info);
+	}else if( status === "parsererror" ){
+		alert(E.parse);
+	}else if( status === "abort" ){
+		alert(E.abort);
+	}else {
+		alert(E.unknown + " : " + jqXHR.responseText);
+	}
 }
 
 // Index page: login
@@ -94,30 +120,36 @@ $(document).on( "pageshow", "#index", function(e) {
 			success: function(response_data){
 				$("#user-login-status").hide();
 				G.auth_token = response_data['auth_token'];
+				G.current_user = response_data['user_id'];
 				$.mobile.change("interviews.html");
 			},
-			error: function(){
+			error: function(jqXHR, status){
 				$("#user-login-status").hide();
-				alert(E.login)
+				error_alert(jqXHR, status, E.internal.login);
 			}
 		});
 	});	
 });
 
+// Settings page: configuration of server
 $(document).on( "pageshow", "#settings", function(e) {
 	// checking whether the server that domain and port pair indicate be reached 
 	$("#settings-save").on("click", function(e){
-		$("#connectablity").text("Checking connectability ... ").show();
+		$("#connectability").text("Checking connectability ... ").show();
 		$.ajax({
 			type: "GET",
-			url: api_url(A.test_connect),
-			success: function(responseData){
-				// TODO: do something 	
-			}
+			url: api_url(A.test_connect)
+		}).done(function(response){
+			$("#connectability").text("Connect successfully :D").hide();
+			$.mobile.change("index.html");
+		}).fail(function(jqXHR, status){
+			$("#connectability").hide();
+			error_alert(jqXHR, status);
 		});
 	});
 });
 
+// Interviews List page: entry
 $(document).on("pageshow", "#interviews", function(e){
 	// when user log out, the auth_token will be erased from app.
 	$("#user-log-out").on("click", function(e){
@@ -125,13 +157,14 @@ $(document).on("pageshow", "#interviews", function(e){
 			type: "GET",
 			url: api_url(A.log_out),
 		}).done(function(e){
-			G.auth_token = null;
+			G.auth_token = "";
+			G.user_id = "";
 			$.mobile.change("index.html");
 		});
 	});
 	
 	$(".interviews-interval").on("click", function(e){
-		// TODO:
+		// TODO:	
 	});
 	
 	$("#interviews-to-current").on("click", function(e){
