@@ -46,7 +46,8 @@ app.initialize();
 // GLOBAL VARIABLE
 var G = {
     current_user: "",
-	auth_token: ""
+	auth_token: "",
+	user: null,
 }
 
 // CONFIGURATION
@@ -60,6 +61,11 @@ var A = {
 	log_out: "logout",
 	interviews: "interviews",
 	interview: "interview",
+	
+	photo: {
+		upload: "photo/upload",
+		download: "photo/download"
+	},
 	
 	test_connect: "test"
 }
@@ -79,7 +85,7 @@ var E = {
 
 // API URL BUILDER
 function api_url( path ){
-	var ret = CONFIG.api_prefix + path + ".json?user_id="+ G.current_user;  
+	var ret = C.api_prefix + path + ".json?user_id="+ G.current_user;  
 	return ret;
 }
 
@@ -103,9 +109,9 @@ function error_alert(jqXHR, status, error_info){
 
 // Index page: login
 $(document).on( "pageshow", "#index", function(e) {
-	$("log-in-button").on("click", function(e){
+	$("#log-in-button").on("click", function(e){
 		e.preventDefault();
-		$("user-login-status").text(" Connecting ... ").show();
+		$("#-login-status").text(" Connecting ... ").show();
 		var username = $("input#username").val();
 		var password = $("input#password").val();
 		var form_data = {"user":{"email":username, "password":password}};
@@ -121,7 +127,7 @@ $(document).on( "pageshow", "#index", function(e) {
 				$("#user-login-status").hide();
 				G.auth_token = response_data['auth_token'];
 				G.current_user = response_data['user_id'];
-				$.mobile.change("interviews.html");
+				$.mobile.changePage("interviews.html");
 			},
 			error: function(jqXHR, status){
 				$("#user-login-status").hide();
@@ -141,7 +147,7 @@ $(document).on( "pageshow", "#settings", function(e) {
 			url: api_url(A.test_connect)
 		}).done(function(response){
 			$("#connectability").text("Connect successfully :D").hide();
-			$.mobile.change("index.html");
+			$.mobile.changePage("index.html");
 		}).fail(function(jqXHR, status){
 			$("#connectability").hide();
 			error_alert(jqXHR, status);
@@ -156,23 +162,11 @@ $(document).on("pageshow", "#interviews", function(e){
 		$.ajax({
 			type: "GET",
 			url: api_url(A.log_out),
-		}).done(function(e){
+		}).always(function(e){
 			G.auth_token = "";
 			G.user_id = "";
-			$.mobile.change("index.html");
+			jQuery.mobile.changePage("index.html");
 		});
-	});
-	
-	$(".interviews-interval").on("click", function(e){
-		// TODO:	
-	});
-	
-	$("#interviews-to-current").on("click", function(e){
-		// TODO:
-	});
-	
-	$("#interviews-refresh").on("click", function(e){
-		// TODO:
 	});
 });
 
@@ -189,6 +183,52 @@ $(document).on("pageshow", "#feedback", function(e){
 	});
 });
 
+// agularjs controllers 
+function InterviewsCtrl($scope){
+	$scope.interviews = [
+		{id:0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
+		{id:1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
+		{id:2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+	];
+	
+	$scope.todayInterviews = function(){
+		$scope.interviews = [
+			{id:0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
+			{id:1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
+			{id:2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
+		]	
+	};
+	
+	$scope.weekInterviews = function(){
+		$scope.interviews = [
+			{id: 0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
+			{id: 1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
+			{id: 2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 3, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 4, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 5, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
+		]	
+	};
+	
+	$scope.monthInterviews = function(){
+		$scope.interviews = [
+			{id: 0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
+			{id: 1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
+			{id: 2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 3, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 4, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 5, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 6, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 7, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
+		]	
+	};
+	
+	$scope.interviewDetail = function(interview_id){
+		// todo: 
+		console.log("interview id is : "+ interview_id);
+		jQuery.mobile.changePage("interview.html");
+	}
+};
 
 function uploadPhoto(imageURI) {
     var options = new FileUploadOptions();
@@ -205,11 +245,6 @@ function uploadPhoto(imageURI) {
     var ft = new FileTransfer();
     var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/upload";
     ft.upload(imageURI, encodeURI(action), win, fail, options);
-}
-
-function full_url( path ) {
-    ret = "http://letshire-dev-yuan.cloudfoundry.com/" + path + ".json"  ;
-    return ret;
 }
 
 function win(r) {
