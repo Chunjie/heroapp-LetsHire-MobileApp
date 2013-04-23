@@ -48,6 +48,7 @@ var G = {
     current_user: "",
 	auth_token: "",
 	user: null,
+	current_interview_id: ""
 }
 
 // CONFIGURATION
@@ -127,7 +128,7 @@ $(document).on( "pageshow", "#index", function(e) {
 				$("#user-login-status").hide();
 				G.auth_token = response_data['auth_token'];
 				G.current_user = response_data['user_id'];
-				$.mobile.changePage("interviews.html");
+				$.mobile.changePage("index.html#interviews");
 			},
 			error: function(jqXHR, status){
 				$("#user-login-status").hide();
@@ -171,7 +172,9 @@ $(document).on("pageshow", "#interviews", function(e){
 });
 
 $(document).on("pageshow", "#interview", function(e){
-	// TODO:
+	$("#interview-back").on("click", function(e){
+		$.mobile.changePage("#interviews");	
+	});
 });
 
 $(document).on("pageshow", "#feedback", function(e){
@@ -182,6 +185,10 @@ $(document).on("pageshow", "#feedback", function(e){
 		});
 	});
 });
+
+function UpdateListView(selector){
+	$(selector).listview("refresh");
+}
 
 // agularjs controllers 
 function InterviewsCtrl($scope){
@@ -196,7 +203,9 @@ function InterviewsCtrl($scope){
 			{id:0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
 			{id:1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
 			{id:2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
-		]	
+		];
+		$scope.$apply();
+		UpdateListView("#interviews-list");
 	};
 	
 	$scope.weekInterviews = function(){
@@ -207,7 +216,9 @@ function InterviewsCtrl($scope){
 			{id: 3, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
 			{id: 4, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
 			{id: 5, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
-		]	
+		];
+		$scope.$apply();
+		UpdateListView("#interviews-list");
 	};
 	
 	$scope.monthInterviews = function(){
@@ -220,16 +231,34 @@ function InterviewsCtrl($scope){
 			{id: 5, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
 			{id: 6, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
 			{id: 7, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
-		]	
+		];
+		$scope.$apply();
+		UpdateListView("#interviews-list");
 	};
-	
+		
 	$scope.interviewDetail = function(interview_id){
 		// todo: 
 		console.log("interview id is : "+ interview_id);
-		jQuery.mobile.changePage("interview.html");
-	}
+		G.current_interview_id = interview_id;
+		
+		$rootScope.interview = {
+			id: G.current_interview_id,
+			title: "Sr. MTS",
+			location: "BoF",
+			status: "Not Started",
+			scheduled_at: " Now "
+		}
+		
+		jQuery.mobile.changePage("#interview");
+	};
 };
 
+function InterviewCtrl($scope){
+	$scope.interview = $rootScope.interview;	
+}
+
+
+// Generic File Uploader
 function uploadPhoto(imageURI) {
     var options = new FileUploadOptions();
     options.fileKey="myfile";
