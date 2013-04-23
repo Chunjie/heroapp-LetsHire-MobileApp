@@ -241,20 +241,11 @@ function InterviewsCtrl($scope){
 		console.log("interview id is : "+ interview_id);
 		G.current_interview_id = interview_id;
 		
-		$rootScope.interview = {
-			id: G.current_interview_id,
-			title: "Sr. MTS",
-			location: "BoF",
-			status: "Not Started",
-			scheduled_at: " Now "
-		}
-		
 		jQuery.mobile.changePage("#interview");
 	};
 };
 
-function InterviewCtrl($scope){
-	$scope.interview = $rootScope.interview;	
+function InterviewCtrl($scope){	
 }
 
 
