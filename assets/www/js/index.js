@@ -43,100 +43,213 @@ var app = {
 
 app.initialize();
 
+// GLOBAL VARIABLE
 var G = {
     current_user: "",
+	auth_token: "",
+	user: null,
+	current_interview_id: ""
 }
 
-$(document).on( "pageshow", "#settings", function(e) {
-	$('#setting-save').on('click', function(e) {
-	    e.preventDefault();
-	    $("#connect_status").text("Check connectability ...").show();
-	    $.getJSON(full_url("heartbeats"), {
-		format: "json"
-	    })
-	    .done(function(data) {
-		if ( data['ret'] == 'ok'){
-		    window.localStorage.setItem("domain", $('#domain').val() );
-		    window.localStorage.setItem("port", $('#port').val() );    
-		    $.mobile.changePage( "index.html", { transition: "slide" });
-		    $("#connect_status").hide();
-		}
-	    })
-	});
-});
+// CONFIGURATION
+var C = {
+	api_prefix: "http://letshire-dev-yuan.cloudfoundry.com/api/v1/"
+}
 
+// ACTION PATH MAPPINGS
+var A = {
+	log_in: "login",
+	log_out: "logout",
+	interviews: "interviews",
+	interview: "interview",
+	
+	photo: {
+		upload: "photo/upload",
+		download: "photo/download"
+	},
+	
+	test_connect: "test"
+}
+
+// Error Messages
+var E = {
+	timeout: "Time out",
+	abort: "Abort",
+	no_network: "Not connect, verify your network",
+	not_found: "Requested Resource Not Found",
+	parse: "JSON parser error",
+	unknown: "Unknown Error",
+	internal: {
+		login: "Log in failed ... "
+	}
+}
+
+// API URL BUILDER
+function api_url( path ){
+	var ret = C.api_prefix + path + ".json?user_id="+ G.current_user;  
+	return ret;
+}
+
+// this method should be called in each error handler if you want to popup
+// something.
+function error_alert(jqXHR, status, error_info){
+	if( jqXHR.status === 0 ){
+		alert(E.no_network);	
+	}else if( jqXHR.status == 404 ){
+		alert(E.not_found);
+	}else if( jqXHR.status == 500 ){
+		alert(error_info);
+	}else if( status === "parsererror" ){
+		alert(E.parse);
+	}else if( status === "abort" ){
+		alert(E.abort);
+	}else {
+		alert(E.unknown + " : " + jqXHR.responseText);
+	}
+}
+
+// Index page: login
 $(document).on( "pageshow", "#index", function(e) {
-
-	$('#log-in-button').on('click', function(e) {
-		var $this = $(this);
+	$("#log-in-button").on("click", function(e){
 		e.preventDefault();
-		$("#user-login-status").text("Connecting ... ").show();
-		username = $("input#username").val();
-		password = $("input#password").val();
-		form_data = {"user": {"email": username, "password": password}};
+		$("#-login-status").text(" Connecting ... ").show();
+		var username = $("input#username").val();
+		var password = $("input#password").val();
+		var form_data = {"user":{"email":username, "password":password}};
 		
 		$.ajax({
-		    dataType: "json",
-		    url: full_url("users/sign_in"),
-		    processData: false,
-		    contentType: "application/json",
-		    data: JSON.stringify(form_data),
-		    type: "POST",
-		    success: function(response_data){
-			if(response_data['ret'] == 'Success'){
-			    $("#user-login-status").hide();
-			    user_id = response_data['user']['id'];
-			    G.current_user = user_id;
-			    $.mobile.changePage("interviews.html");
-			}else{
-			    $("#user-login-status").hide();
-			    alert("Login Failed ... ");
+			dataType: "json",
+			url: api_url(A.log_in),
+			processData: false,
+			contentType: "application/json",
+			data: JSON.stringify(form_data),
+			type: "POST",
+			success: function(response_data){
+				$("#user-login-status").hide();
+				G.auth_token = response_data['auth_token'];
+				G.current_user = response_data['user_id'];
+				$.mobile.changePage("index.html#interviews");
+			},
+			error: function(jqXHR, status){
+				$("#user-login-status").hide();
+				error_alert(jqXHR, status, E.internal.login);
 			}
-		    },
-		    error: function(){
-		    	$("#user-login-status").hide();
-		    	alert("Error logging in !");
-		    }
+		});
+	});	
+});
+
+// Settings page: configuration of server
+$(document).on( "pageshow", "#settings", function(e) {
+	// checking whether the server that domain and port pair indicate be reached 
+	$("#settings-save").on("click", function(e){
+		$("#connectability").text("Checking connectability ... ").show();
+		$.ajax({
+			type: "GET",
+			url: api_url(A.test_connect)
+		}).done(function(response){
+			$("#connectability").text("Connect successfully :D").hide();
+			$.mobile.changePage("index.html");
+		}).fail(function(jqXHR, status){
+			$("#connectability").hide();
+			error_alert(jqXHR, status);
 		});
 	});
 });
 
+// Interviews List page: entry
 $(document).on("pageshow", "#interviews", function(e){
-	$("#log-out-button").click(function(){
-	    $.mobile.changePage("index.html", {transition: "slide"});
-	    G.current_user = null;
+	// when user log out, the auth_token will be erased from app.
+	$("#user-log-out").on("click", function(e){
+		$.ajax({
+			type: "GET",
+			url: api_url(A.log_out),
+		}).always(function(e){
+			G.auth_token = "";
+			G.user_id = "";
+			jQuery.mobile.changePage("index.html");
+		});
 	});
 });
 
-$(document).on( "pageshow", "#interview", function(e) {
-	$('#interview-action').click(function(){
-		$('#status').text("Started");
-		$(this).find(".ui-btn-text").text("Finish")
+$(document).on("pageshow", "#interview", function(e){
+	$("#interview-back").on("click", function(e){
+		$.mobile.changePage("#interviews");	
 	});
+});
+
+$(document).on("pageshow", "#feedback", function(e){
+	$("#feedback-save").on("click", function(e){
+		var feedback_content = $("#feedback-content").val();
+		$.ajax({
+			// TODO:
+		});
+	});
+});
+
+function UpdateListView(selector){
+	$(selector).listview("refresh");
+}
+
+// agularjs controllers 
+function InterviewsCtrl($scope){
+	$scope.interviews = [
+		{id:0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
+		{id:1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
+		{id:2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+	];
 	
-	$(".interviewNoteItem").on("taphold", function(e){
-	    $("#interviewNoteMenu").popup("open");    
-	});
+	$scope.todayInterviews = function(){
+		$scope.interviews = [
+			{id:0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
+			{id:1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
+			{id:2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
+		];
+		$scope.$apply();
+		UpdateListView("#interviews-list");
+	};
 	
-	$(".attachPhotoAction").click(function(){
-	navigator.camera.getPicture(uploadPhoto,
-	    function(message) { alert('get picture failed'); },
-	    { quality: 50, 
-	    destinationType: navigator.camera.DestinationType.FILE_URI,
-	    sourceType: Camera.PictureSourceType.CAMERA,
-	    saveToPhotoAlbum: true }
-	);
-    });
-});
+	$scope.weekInterviews = function(){
+		$scope.interviews = [
+			{id: 0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
+			{id: 1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
+			{id: 2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 3, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 4, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 5, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
+		];
+		$scope.$apply();
+		UpdateListView("#interviews-list");
+	};
+	
+	$scope.monthInterviews = function(){
+		$scope.interviews = [
+			{id: 0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
+			{id: 1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
+			{id: 2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 3, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 4, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 5, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 6, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+			{id: 7, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
+		];
+		$scope.$apply();
+		UpdateListView("#interviews-list");
+	};
+		
+	$scope.interviewDetail = function(interview_id){
+		// todo: 
+		console.log("interview id is : "+ interview_id);
+		G.current_interview_id = interview_id;
+		
+		jQuery.mobile.changePage("#interview");
+	};
+};
 
-$(document).on( "pageshow", "#feedback", function(e) {
-    
-});
+function InterviewCtrl($scope){	
+}
 
-$(document).on( "pageshow", "#candidate", function(e) {
-    
-});
 
+// Generic File Uploader
 function uploadPhoto(imageURI) {
     var options = new FileUploadOptions();
     options.fileKey="myfile";
@@ -152,11 +265,6 @@ function uploadPhoto(imageURI) {
     var ft = new FileTransfer();
     var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/upload";
     ft.upload(imageURI, encodeURI(action), win, fail, options);
-}
-
-function full_url( path ) {
-    ret = "http://letshire-dev-yuan.cloudfoundry.com/" + path + ".json"  ;
-    return ret;
 }
 
 function win(r) {

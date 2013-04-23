@@ -1,29 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html ng-app>
     <head>
     	<title>Let's Hire</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="viewport" content=", width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />
         
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />     
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />     
         <link rel="stylesheet" type="text/css" href="themes/android-theme.css" />   
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         
         <script type="text/javascript" src="cordova-2.5.0.js"></script>
         <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
-		<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.js"></script>
+		<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.js"></script>
 		<script type="text/javascript">
 			var DEBUG_ANDROID_THEME=true
-		</script>    
-		<script type="text/javascript" src="js/jquery.mobile.android-theme.js"></script>
-		<script type="text/javascript" src="js/index.js"></script>  
+		</script>
+		<script type="text/javascript" src="js/angular.min.js"></script>
+		<script type="text/javascript" src="js/jquery-mobile-angular-adapter-standalone.min.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile.android-theme.js"></script>	
+		<script type="text/javascript" src="js/index.js"></script>
+		<script src="http://debug.phonegap.com/target/target-script-min.js#anonymous"></script>
     </head>
     <body>
+		<!-- index -->
         <div id="index" data-role="page" data-theme="c">
 
 			<div data-role="header" data-position="fixed">
 				<h1>Let's Hire</h1>
+				<a id="index-other" href="#index-popup-menu" data-rel="popup" class="ui-btn-right"> III </a>
 			</div><!-- /header -->
 		
 			<div data-role="content">
@@ -33,16 +38,115 @@
 					<input type="text" name="username" id="username" placeholder='admin@local.com'/>
 					<label for="password">Password:</label>
 					<input type="password" name="password" id="password" />
-					<a data-role="button" data-ajax="false" data-rel="external" id="log-in-button">Sign in</a>
+					<a id="log-in-button" data-role="button" data-ajax="false" data-rel="external" >Log in</a>
 				</form>	
 			</div><!-- /content -->
+			
+			<div id="index-popup-menu" data-role="popup" data-theme="d">
+				<ul data-role="listview" data-inset="true" style="min-width: 210px;" data-theme="d">
+					<li data-role="divider" data-theme="e">Options</li>
+					<li><a href="settings.html">Settings</a></li>
+					<li><a href="about.html">About</a></li>
+				</ul>	
+			</div>
+			
+		</div><!-- /page -->
+		
+		<!-- interviews -->
+		<div id="interviews" data-role="page" data-theme="c" ng-controller="InterviewsCtrl">
+			<div data-role="header">
+				<a id="interviews-user" data-role="button" href="#interviews-menu-panel">yuanzhuang@vmware.com</a>
+				<h1>  </h1>
+				<a data-role="button" href="#interviews-settings" data-rel="popup"> III </a>
+			</div>
+			
+			<div data-role="content">
+				<ul id="interviews-list" data-role="listview">
+					<li ng-repeat="interview in interviews">
+						<a ng-click="interviewDetail(interview.id)">
+							<h2>{{interivew.title}}</h2>
+							<p><strong>Candidate for {{interview.title}}, {{interview.location}}</strong></p>
+							<p class="ui-li-aside"><strong>{{interview.scheduled_at}}</strong></p>
+							<p><strong>Status: {{interview.status}}</strong></p>
+						</a>
+					</li>
+				</ul>		
+			</div>
+			
 			<div data-role="footer" data-position="fixed">
-				<div data-role="navbar">
+				<div data-role="navbar" data-grid="a">
 					<ul>
-						<li><a href="settings.html" data-icon="gear" data-iconpos="top">Settings</a></li>
+						<li><a id="interviews-refresh" data-icon="refresh" data-rel="external" data-ajax="false">Refresh</a></li>
+						<li><a id="interviews-to-current" data-icon="right" data-rel="external" data-ajax="false">Current Interview</a></li>
 					</ul>
 				</div>	
 			</div>
+			
+			<div id="interviews-menu-panel" data-role="panel">
+				<ul data-role="listview" data-theme="a">
+					<li><a id="interviews-today" class="interviews-interval" data-ajax="false" data-rel="external" ng-click="todayInterviews()">Today</a></li>
+					<li><a id="interviews-week" class="interviews-interval" data-ajax="false" data-rel="external" ng-click="weekInterviews()">This Week</a></li>
+					<li><a id="interviews-month" class="interview-interval" data-ajax="false" data-rel="external" ng-click="monthInterviews()">This Month</a></li>
+					<li><a id="user-log-out" data-ajax="false" data-rel="external">Log out</a></li>
+				</ul>
+			</div>
+			
+			<div id="interviews-settings" data-role="popup" data-theme="d">
+				<ul data-role="listview" data-inset="true" data-theme="d">
+					<li data-role="divider" data-theme="e">Options</li>
+					<li><a href="#">options 1</a></li>
+					<li><a href="#">options 2</a></li>
+					<li><a href="#">options 3</a></li>
+				</ul>
+			</div>
+		</div>
+		
+		<!-- interview -->
+		<div id="interview" data-role="page" data-theme="c" ng-controller="InterviewCtrl">
+			<div data-role="header">
+				<a id="interview-back" data-role="button" data-icon="arrow-l">Back</a>
+				<h1>Interview</h1>
+			</div>
+			
+			<div data-role="content">
+				<div id="interview-text-details">
+					<a href="#"><h1>{{interview.id}}</h1></a>
+					<p> Apply for {{interview.title}}</p>
+					<p> {{interview.location}}</p>
+					<p> Status: {{interview.status}}</p>
+					<p> Time: {{interview.scheduled_at}}</p>
+				</div>
+				<p><strong>Attachments:</strong></p>
+				<div id="interview-attachment-details">
+					<a href="#popupParis" data-rel="popup" data-position-to="window" data-transition="fade"><img class="popphoto" src="../img/paris.jpg" alt="Paris, France" style="width:30%"></a>
+					<a href="#popupSydney" data-rel="popup" data-position-to="window" data-transition="fade"><img class="popphoto" src="..//img/sydney.jpg" alt="Sydney, Australia" style="width:30%"></a>
+					<a href="#popupNYC" data-rel="popup" data-position-to="window" data-transition="fade"><img class="popphoto" src="../img/newyork.jpg" alt="New York, USA" style="width:30%"></a>
+					<div data-role="popup" id="popupParis" data-overlay-theme="a" data-theme="d" data-corners="false">
+						<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img class="popphoto" src="../img/paris.jpg" style="max-height:512px;" alt="Paris, France">
+					</div>
+					<div data-role="popup" id="popupSydney" data-overlay-theme="a" data-theme="d" data-corners="false">
+						<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img class="popphoto" src="../img/sydney.jpg" style="max-height:512px;" alt="Sydney, Australia">
+					</div>
+					<div data-role="popup" id="popupNYC" data-overlay-theme="a" data-theme="d" data-corners="false">
+						<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img class="popphoto" src="../img/newyork.jpg" style="max-height:512px;" alt="New York, USA">
+					</div>
+				</div>
+			</div>
+			
+			<div data-role="footer" data-position="fixed" >
+				<div data-role="navbar" data-grid="c">
+					<ul>
+						<li><a id="interview-action" data-icon="right">Action</a></li>
+						<li><a id="interview-attach-photo" data-icon="plus">Photo</a></li>
+						<li><a id="interview-attach-audio" data-icon="plus">Audio</a></li>
+						<li><a id="interview-feedback" data-icon="edit" href="feedback.html">Feedback</a></li>
+					</ul>
+				</div>
+			</div>
+			
 		</div><!-- /page -->
+		
+		<!-- feedback -->
+		
     </body>
 </html>
