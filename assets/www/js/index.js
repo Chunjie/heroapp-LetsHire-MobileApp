@@ -48,7 +48,8 @@ var G = {
     current_user: "",
 	auth_token: "",
 	user: null,
-	current_interview_id: ""
+	current_interview_id: "",
+	username: ""
 }
 
 // CONFIGURATION
@@ -84,9 +85,14 @@ var E = {
 	}
 }
 
+var Image = {
+	URI: "",
+	filename: ""
+}
+
 // API URL BUILDER
 function api_url( path ){
-	var ret = C.api_prefix + path + ".json?user_id="+ G.current_user;  
+	var ret = C.api_prefix + path + ".json?auth_token=" + G.auth_token;  
 	return ret;
 }
 
@@ -126,8 +132,10 @@ $(document).on( "pageshow", "#index", function(e) {
 			type: "POST",
 			success: function(response_data){
 				$("#user-login-status").hide();
-				G.auth_token = response_data['auth_token'];
+				G.auth_token = response_data['session']['auth_token'];
 				G.current_user = response_data['user_id'];
+				G.username = username;
+				$("#interviews-user .ui-btn-text").text(G.username);
 				$.mobile.changePage("index.html#interviews");
 			},
 			error: function(jqXHR, status){
@@ -158,6 +166,11 @@ $(document).on( "pageshow", "#settings", function(e) {
 
 // Interviews List page: entry
 $(document).on("pageshow", "#interviews", function(e){
+	
+	$("#interviews-user .ui-btn-text").text(G.username);
+	
+	//$("#interviews-today").trigger("click");
+	
 	// when user log out, the auth_token will be erased from app.
 	$("#user-log-out").on("click", function(e){
 		$.ajax({
@@ -175,6 +188,21 @@ $(document).on("pageshow", "#interview", function(e){
 	$("#interview-back").on("click", function(e){
 		$.mobile.changePage("#interviews");	
 	});
+	
+	$("#interview-attach-audio").on("click", function(e){
+		alert("Not supported for current version.");	
+	});
+	
+	$("#selector-camera").on("click", function(e){
+		$("#photo-source-selector").popup("close");
+		capturePhoto();
+	});
+	
+	$("#selector-gallery").on("click", function(e){
+		$("#photo-source-selector").popup("close");
+		getPhoto();
+	});
+	
 });
 
 $(document).on("pageshow", "#feedback", function(e){
@@ -186,9 +214,49 @@ $(document).on("pageshow", "#feedback", function(e){
 	});
 });
 
+// capture photo from camera
+function capturePhoto(){
+	navigator.camera.getPicture(onPhotoURISuccess, onFail, {
+		quality: 50,
+		destinationType: navigator.camera.DestinationType.FILE_URI,
+		sourceType: Camera.PictureSourceType.CAMERA,
+		saveToPhotoAlbum: true
+	});	
+};
+
+function onPhotoURISuccess(imageURI){
+	alert("The URI is : "+ imageURI);
+	$.mobile.changePage("#throbber-dialog", { role: "dialog"});
+	uploadPhoto(imageURI);
+}
+
+function onFail(message){
+	alert("Failed : "+message);
+}
+
+// capture photo from gallery
+function getPhoto(){
+	navigator.camera.getPicture(onPhotoURISuccess, onFail, {
+		quality: 50,
+		destinationType: navigator.camera.DestinationType.FILE_URI,
+		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+	});	
+};
+
 function UpdateListView(selector){
 	$(selector).listview("refresh");
-}
+};
+
+function requestLatestInterviews(interval){
+	$.ajax({
+		type: "GET",
+		url: api_url(A.interviews) + "&interval=" + interval
+	}).done(function(response){
+		return response["interviews"];
+	}).fail(function(jqXHR, status){
+		error_alert(jqXHR, status);
+	});
+};
 
 // agularjs controllers 
 function InterviewsCtrl($scope){
@@ -199,39 +267,19 @@ function InterviewsCtrl($scope){
 	];
 	
 	$scope.todayInterviews = function(){
-		$scope.interviews = [
-			{id:0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
-			{id:1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
-			{id:2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
-		];
+		$scope.interviews = requestLatestInterviews("1d");
 		$scope.$apply();
 		UpdateListView("#interviews-list");
 	};
 	
 	$scope.weekInterviews = function(){
-		$scope.interviews = [
-			{id: 0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
-			{id: 1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
-			{id: 2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
-			{id: 3, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
-			{id: 4, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
-			{id: 5, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
-		];
+		$scope.interviews = requestLatestInterviews("1w");
 		$scope.$apply();
 		UpdateListView("#interviews-list");
 	};
 	
 	$scope.monthInterviews = function(){
-		$scope.interviews = [
-			{id: 0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
-			{id: 1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
-			{id: 2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
-			{id: 3, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
-			{id: 4, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
-			{id: 5, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
-			{id: 6, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
-			{id: 7, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"}
-		];
+		$scope.interviews = requestLatestInterviews("1m");
 		$scope.$apply();
 		UpdateListView("#interviews-list");
 	};
@@ -239,31 +287,20 @@ function InterviewsCtrl($scope){
 	$scope.interviewDetail = function(interview_id){
 		// todo: 
 		console.log("interview id is : "+ interview_id);
-		G.current_interview_id = interview_id;
-		
 		jQuery.mobile.changePage("#interview");
-	};
+	};	
 };
-
-function InterviewCtrl($scope){	
-}
-
 
 // Generic File Uploader
 function uploadPhoto(imageURI) {
     var options = new FileUploadOptions();
-    options.fileKey="myfile";
-    options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-    options.mimeType="image/jpeg";
-
-    var params = {};
-    params.value1 = "test";
-    params.value2 = "param";
-
-    options.params = params;
-
+    options.fileKey  = "file";
+    options.fileName = imageURI.substr(imageURI.lastIndexOf('/')+1);
+    options.mimeType = "image/jpeg";
+	Image.filename = options.fileName;
+	Image.URI = imageURI;
     var ft = new FileTransfer();
-    var action = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/upload";
+    var action = api_url(A.photo.upload);
     ft.upload(imageURI, encodeURI(action), win, fail, options);
 }
 
@@ -271,12 +308,29 @@ function win(r) {
     console.log("Code = " + r.responseCode);
     console.log("Response = " + r.response);
     console.log("Sent = " + r.bytesSent);
-    var imgPath = "http://" + window.localStorage.getItem("domain") + ":" + window.localStorage.getItem("port") + "/images/";
-    $('#photo').text(imgPath + r.response);
+	stopThrobber();
+	alert("Upload successfully and the response is "+r.response + "");
+	refreshPhotos();
 }
 
 function fail(error) {
-    alert("An error has occurred: Code = " + error.code);
+    stopThrobber();
+	alert("An error has occurred: Code = " + error.code);
     console.log("upload error source " + error.source);
     console.log("upload error target " + error.target);
+}
+
+// hide the uploading indicator
+function stopThrobber(){
+	$("#throbber-dialog").dialog("close");
+}
+
+
+// update the photos gallery
+function refreshPhotos(){
+	var photoElement = '<a href="#'+ Image.filename+'" data-rel="popup" data-position-to="window" data-transition="fade"><img class="popphoto" src="' + Image.URI +'" alt="' + Image.filename + '" style="width:30%"></a>' + 
+	'<div data-role="popup" id="' + Image.filename + '" data-overlay-theme="a" data-theme="d" data-corners="false">' +
+		'<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img class="popphoto" src="' + Image.URI + '" style="max-height:512px;" alt="' + Image.filename + '">' +
+	'</div>';
+	$("#interview-attachment-details").append(photoElement).trigger('create');
 }
