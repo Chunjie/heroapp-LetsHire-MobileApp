@@ -35,10 +35,10 @@
 				<label id="user-login-status" style="display: none">Connecting ... </label>
 				<form id="user-login-form">
 					<label for="username">Username:</label>
-					<input type="text" name="username" id="username" placeholder='admin@local.com'/>
+					<input type="text" name="username" id="username" placeholder='admin@local.com' value="admin@local.com"/>
 					<label for="password">Password:</label>
-					<input type="password" name="password" id="password" />
-					<a id="log-in-button" data-role="button" data-ajax="false" data-rel="external" >Log in</a>
+					<input type="password" name="password" id="password" value="admin"/>
+					<a id="log-in-button" data-role="button" data-ajax="false" data-rel="external">Log in</a>
 				</form>	
 			</div><!-- /content -->
 			
@@ -102,7 +102,7 @@
 		</div>
 		
 		<!-- interview -->
-		<div id="interview" data-role="page" data-theme="c" ng-controller="InterviewCtrl">
+		<div id="interview" data-role="page" data-theme="c" ng-controller="InterviewsCtrl">
 			<div data-role="header">
 				<a id="interview-back" data-role="button" data-icon="arrow-l">Back</a>
 				<h1>Interview</h1>
@@ -110,26 +110,15 @@
 			
 			<div data-role="content">
 				<div id="interview-text-details">
-					<a href="#"><h1>{{interview.id}}</h1></a>
-					<p> Apply for {{interview.title}}</p>
-					<p> {{interview.location}}</p>
-					<p> Status: {{interview.status}}</p>
-					<p> Time: {{interview.scheduled_at}}</p>
+					<h1>{{theInterview.name}}</h1>
+					<p> Apply for {{theInterview.title}}</p>
+					<p> {{theInterview.location}}</p>
+					<p> Status: {{theInterview.status}}</p>
+					<p> Time: {{theInterview.scheduled_at}}</p>
 				</div>
 				<p><strong>Attachments:</strong></p>
 				<div id="interview-attachment-details">
-					<a href="#popupParis" data-rel="popup" data-position-to="window" data-transition="fade"><img class="popphoto" src="../img/paris.jpg" alt="Paris, France" style="width:30%"></a>
-					<a href="#popupSydney" data-rel="popup" data-position-to="window" data-transition="fade"><img class="popphoto" src="..//img/sydney.jpg" alt="Sydney, Australia" style="width:30%"></a>
-					<a href="#popupNYC" data-rel="popup" data-position-to="window" data-transition="fade"><img class="popphoto" src="../img/newyork.jpg" alt="New York, USA" style="width:30%"></a>
-					<div data-role="popup" id="popupParis" data-overlay-theme="a" data-theme="d" data-corners="false">
-						<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img class="popphoto" src="../img/paris.jpg" style="max-height:512px;" alt="Paris, France">
-					</div>
-					<div data-role="popup" id="popupSydney" data-overlay-theme="a" data-theme="d" data-corners="false">
-						<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img class="popphoto" src="../img/sydney.jpg" style="max-height:512px;" alt="Sydney, Australia">
-					</div>
-					<div data-role="popup" id="popupNYC" data-overlay-theme="a" data-theme="d" data-corners="false">
-						<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img class="popphoto" src="../img/newyork.jpg" style="max-height:512px;" alt="New York, USA">
-					</div>
+					
 				</div>
 			</div>
 			
@@ -137,14 +126,29 @@
 				<div data-role="navbar" data-grid="c">
 					<ul>
 						<li><a id="interview-action" data-icon="right">Action</a></li>
-						<li><a id="interview-attach-photo" data-icon="plus">Photo</a></li>
+						<li><a id="interview-attach-photo" data-icon="plus" href="#photo-source-selector" data-rel="popup" data-position-to="window">Photo</a></li>
 						<li><a id="interview-attach-audio" data-icon="plus">Audio</a></li>
 						<li><a id="interview-feedback" data-icon="edit" href="feedback.html">Feedback</a></li>
 					</ul>
 				</div>
 			</div>
 			
+			<div id="photo-source-selector" data-role="popup" data-theme="d">
+				<ul data-role="listview" data-inset="true" data-theme="d"  style="min-width: 210px">
+					<li data-role="divider" data-theme="e">Select Source</li>
+					<li><a id="selector-gallery" data-rel="external" data-ajax="false">Attach photo from Gallery</a></li>
+					<li><a id="selector-camera" data-rel="external" data-ajax="false">Attach photo from Camera</a></li>
+				</ul>
+				
+			</div>
+			
 		</div><!-- /page -->
+		
+		
+		<div id="throbber-dialog" data-role="page" data-rel="dialog" data-close-btn="none">
+			<img src="img/Ajax-loader.gif" />
+			<p> Uploading Photo ... </p>
+		</div>
 		
 		<!-- feedback -->
 		
