@@ -49,7 +49,8 @@ var G = {
 	auth_token: "",
 	user: null,
 	current_interview_id: "",
-	username: ""
+	username: "",
+	current_interview: {}
 }
 
 // CONFIGURATION
@@ -62,7 +63,7 @@ var A = {
 	log_in: "login",
 	log_out: "logout",
 	interviews: "interviews",
-	interview: "interview",
+	interview: "interviews/",
 	
 	photo: {
 		upload: "photo/upload",
@@ -169,7 +170,7 @@ $(document).on("pageshow", "#interviews", function(e){
 	
 	$("#interviews-user .ui-btn-text").text(G.username);
 	
-	//$("#interviews-today").trigger("click");
+	$("#interviews-today").trigger("click");
 	
 	// when user log out, the auth_token will be erased from app.
 	$("#user-log-out").on("click", function(e){
@@ -201,6 +202,26 @@ $(document).on("pageshow", "#interview", function(e){
 	$("#selector-gallery").on("click", function(e){
 		$("#photo-source-selector").popup("close");
 		getPhoto();
+	});
+	
+	$("#interview-action").on("click", function(e){
+		form_data = { "interview" : { "status" : nextStatus( G.current_interview.status ) } };
+		$("#interview-action .ui-btn-text").text(nextAction(G.current_interview.status));
+		
+		$.ajax({
+			dataType: "json",
+			url: C.api_prefix + "interviews/" + G.current_interview.id + ".json?auth_token=" + G.auth_token,
+			processData: false,
+			contentType: "application/json",
+			data: JSON.stringify(form_data),
+			type: "PUT",
+		}).done(function(response){
+			G.current_interview = response['interview'];
+			updateInterviewInfo(G.current_interview);
+		}).fail(function(jqXHR, status){
+			error_alert(jqXHR, status);
+			$("#interview-action .ui-btn-text").text(G.current_interview.status)
+		});		
 	});
 	
 });
@@ -261,35 +282,102 @@ function requestLatestInterviews(interval){
 // agularjs controllers 
 function InterviewsCtrl($scope){
 	$scope.interviews = [
-		{id:0, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 14:30"},
-		{id:1, title: "MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-23 15:30"},
-		{id:2, title: "Sr. MTS", locaiton: "Room 203", status: "Not Started", scheduled_at: "2013-04-24 14:30"},
+		
 	];
 	
 	$scope.todayInterviews = function(){
-		$scope.interviews = requestLatestInterviews("1d");
-		$scope.$apply();
-		UpdateListView("#interviews-list");
+		$.ajax({
+			type: "GET",
+			url: api_url(A.interviews) + "&interval=1d"
+		}).done(function(response){
+			$scope.interviews = response["interviews"];
+			$scope.$apply();
+			UpdateListView("#interviews-list");
+		}).fail(function(jqXHR, status){
+			error_alert(jqXHR, status);
+		});
 	};
 	
 	$scope.weekInterviews = function(){
-		$scope.interviews = requestLatestInterviews("1w");
-		$scope.$apply();
-		UpdateListView("#interviews-list");
+		$.ajax({
+			type: "GET",
+			url: api_url(A.interviews) + "&interval=1w"
+		}).done(function(response){
+			$scope.interviews = response["interviews"];
+			$scope.$apply();
+			UpdateListView("#interviews-list");
+		}).fail(function(jqXHR, status){
+			error_alert(jqXHR, status);
+		});
 	};
 	
 	$scope.monthInterviews = function(){
-		$scope.interviews = requestLatestInterviews("1m");
-		$scope.$apply();
-		UpdateListView("#interviews-list");
+		$.ajax({
+			type: "GET",
+			url: api_url(A.interviews) + "&interval=1m"
+		}).done(function(response){
+			$scope.interviews = response["interviews"];
+			$scope.$apply();
+			UpdateListView("#interviews-list");
+		}).fail(function(jqXHR, status){
+			error_alert(jqXHR, status);
+		});
 	};
 		
 	$scope.interviewDetail = function(interview_id){
 		// todo: 
 		console.log("interview id is : "+ interview_id);
 		jQuery.mobile.changePage("#interview");
+		$.ajax({
+			type: "GET",
+			url: C.api_prefix + "interviews/" + interview_id + ".json?auth_token=" + G.auth_token
+		}).done(function(response){
+			G.current_interview = response['interview'];
+			updateInterviewInfo(G.current_interview);
+		}).fail(function(jqXHR, status){
+			error_alert(jqXHR, status);
+		})
 	};	
 };
+
+function updateInterviewInfo( interview ){
+	$("#interview-info-name").text( interview.name );
+	$("#interview-info-title").text( interview.title );
+	$("#interview-info-location").text( interview.locaiton );
+	$("#interview-info-status").text( interview.status );
+	$("#interview-info-time").text( interview.time );
+	$("#interview-action .ui-btn-text").text(nextAction(interview.status));
+}
+
+ActionText = {
+	START : "Start",
+	FINISH: "Finish",
+	OTHER: "Already Done"
+};
+
+function nextAction(current_status){
+	if( current_status == "scheduled" ){
+		return ActionText.START;
+	}else if( current_status == "started" ){
+		return ActionText.FINISH;
+	}else if( current_status == "finished" ){
+		return ActionText.OTHER;
+	}else{
+		return ActionText.OTHER;
+	}
+}
+
+function nextStatus(current_status){
+	if( current_status == "scheduled" ){
+		return "started"
+	}else if( current_status == "started" ){
+		return "finished"
+	}else if( current_status == "finished" ){
+		return "finished"
+	}else{
+		return "finished"
+	}
+}
 
 // Generic File Uploader
 function uploadPhoto(imageURI) {

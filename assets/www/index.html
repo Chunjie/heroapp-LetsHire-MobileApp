@@ -44,7 +44,6 @@
 			
 			<div id="index-popup-menu" data-role="popup" data-theme="d">
 				<ul data-role="listview" data-inset="true" style="min-width: 210px;" data-theme="d">
-					<li data-role="divider" data-theme="e">Options</li>
 					<li><a href="settings.html">Settings</a></li>
 					<li><a href="about.html">About</a></li>
 				</ul>	
@@ -55,7 +54,7 @@
 		<!-- interviews -->
 		<div id="interviews" data-role="page" data-theme="c" ng-controller="InterviewsCtrl">
 			<div data-role="header">
-				<a id="interviews-user" data-role="button" href="#interviews-menu-panel">yuanzhuang@vmware.com</a>
+				<a id="interviews-user" data-role="button" href="#interviews-menu-panel">USERNAME</a>
 				<h1>  </h1>
 				<a data-role="button" href="#interviews-settings" data-rel="popup"> III </a>
 			</div>
@@ -84,16 +83,15 @@
 			
 			<div id="interviews-menu-panel" data-role="panel">
 				<ul data-role="listview" data-theme="a">
-					<li><a id="interviews-today" class="interviews-interval" data-ajax="false" data-rel="external" ng-click="todayInterviews()">Today</a></li>
-					<li><a id="interviews-week" class="interviews-interval" data-ajax="false" data-rel="external" ng-click="weekInterviews()">This Week</a></li>
-					<li><a id="interviews-month" class="interview-interval" data-ajax="false" data-rel="external" ng-click="monthInterviews()">This Month</a></li>
+					<li><a id="interviews-today" class="interviews-interval" data-ajax="false" data-rel="external" ng-click="todayInterviews()">Interviews Today</a></li>
+					<li><a id="interviews-week" class="interviews-interval" data-ajax="false" data-rel="external" ng-click="weekInterviews()">Interviews This Week</a></li>
+					<li><a id="interviews-month" class="interview-interval" data-ajax="false" data-rel="external" ng-click="monthInterviews()">Interviews This Month</a></li>
 					<li><a id="user-log-out" data-ajax="false" data-rel="external">Log out</a></li>
 				</ul>
 			</div>
 			
 			<div id="interviews-settings" data-role="popup" data-theme="d">
 				<ul data-role="listview" data-inset="true" data-theme="d">
-					<li data-role="divider" data-theme="e">Options</li>
 					<li><a href="#">options 1</a></li>
 					<li><a href="#">options 2</a></li>
 					<li><a href="#">options 3</a></li>
@@ -110,11 +108,11 @@
 			
 			<div data-role="content">
 				<div id="interview-text-details">
-					<h1>{{theInterview.name}}</h1>
-					<p> Apply for {{theInterview.title}}</p>
-					<p> {{theInterview.location}}</p>
-					<p> Status: {{theInterview.status}}</p>
-					<p> Time: {{theInterview.scheduled_at}}</p>
+					<h1 id="interview-info-name"></h1>
+					<p> Apply for <h4 id="interview-info-title"></h4> </p>
+					<p> Location:<h4 id="interview-info-location"></h4> </p>
+					<p> Status: <h4 id="interview-info-status"></h4> </p>
+					<p> Time: <h4 id="interview-id-time"></h4> </p>
 				</div>
 				<p><strong>Attachments:</strong></p>
 				<div id="interview-attachment-details">
@@ -139,18 +137,15 @@
 					<li><a id="selector-gallery" data-rel="external" data-ajax="false">Attach photo from Gallery</a></li>
 					<li><a id="selector-camera" data-rel="external" data-ajax="false">Attach photo from Camera</a></li>
 				</ul>
-				
 			</div>
 			
 		</div><!-- /page -->
 		
-		
+		<!-- uploading indicator -->
 		<div id="throbber-dialog" data-role="page" data-rel="dialog" data-close-btn="none">
 			<img src="img/Ajax-loader.gif" />
 			<p> Uploading Photo ... </p>
 		</div>
-		
-		<!-- feedback -->
 		
     </body>
 </html>
