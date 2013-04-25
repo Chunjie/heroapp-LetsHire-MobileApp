@@ -43,6 +43,12 @@ var app = {
 
 app.initialize();
 
+StorageKey = {
+	domain: "settings-domain-key",
+	port: "settings-port-key"
+}
+initSettings();
+
 // GLOBAL VARIABLE
 var G = {
     current_user: "",
@@ -115,6 +121,18 @@ function error_alert(jqXHR, status, error_info){
 	}
 }
 
+function initSettings(){
+	localStorage.setItem(StorageKey.domain, "http://letshire-dev-yuan.cloudfoundry.com");
+	localStorage.setItem(StorageKey.port, "80");
+}
+
+// save settings
+function saveSettings(){
+	localStorage.setItem(StorageKey.domain, $("#settings-domain").val());
+	localStorage.setItem(StorageKey.port, $("#settings-port").val());
+	C.api_prefix = localStorage.getItem(StorageKey.domain)+"/api/v1/"
+}
+
 // Index page: login
 $(document).on( "pageshow", "#index", function(e) {
 	$("#log-in-button").on("click", function(e){
@@ -149,14 +167,21 @@ $(document).on( "pageshow", "#index", function(e) {
 
 // Settings page: configuration of server
 $(document).on( "pageshow", "#settings", function(e) {
+	
+	$("#settings-domain").val(localStorage.getItem(StorageKey.domain));
+	$("#settings-port").val(localStorage.getItem(StorageKey.port));
+	C.api_prefix = localStorage.getItem(StorageKey.domain)+"/api/v1/"
+	
 	// checking whether the server that domain and port pair indicate be reached 
 	$("#settings-save").on("click", function(e){
 		$("#connectability").text("Checking connectability ... ").show();
+	
 		$.ajax({
 			type: "GET",
-			url: api_url(A.test_connect)
+			url: $("#settings-domain").val() + "/api/v1/" + A.test_connect
 		}).done(function(response){
 			$("#connectability").text("Connect successfully :D").hide();
+			saveSettings();
 			$.mobile.changePage("index.html");
 		}).fail(function(jqXHR, status){
 			$("#connectability").hide();
