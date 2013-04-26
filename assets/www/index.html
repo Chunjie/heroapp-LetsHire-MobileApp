@@ -1,151 +1,211 @@
 <!DOCTYPE html>
 <html ng-app>
     <head>
-    	<title>Let's Hire</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content=", width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />
+        <title>Lets Hire</title>
         
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />     
-        <link rel="stylesheet" type="text/css" href="themes/android-theme.css" />   
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <!-- Main Stylesheet -->
+        <link rel="stylesheet" href="js/lungo/lungo.css">
+        <link rel="stylesheet" href="js/lungo/lungo.icon.css">
+        <link rel="stylesheet" href="js/lungo/lungo.icon.brand.css">
+        <link rel="stylesheet" href="js/lungo/lungo.css">
+        <link rel="stylesheet" href="js/lungo/theme.lungo.css">
         
-        <script type="text/javascript" src="cordova-2.5.0.js"></script>
-        <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
-		<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.js"></script>
-		<script type="text/javascript">
-			var DEBUG_ANDROID_THEME=true
-		</script>
-		<script type="text/javascript" src="js/angular.min.js"></script>
-		<script type="text/javascript" src="js/jquery-mobile-angular-adapter-standalone.min.js"></script>
-		<script type="text/javascript" src="js/jquery.mobile.android-theme.js"></script>	
-		<script type="text/javascript" src="js/index.js"></script>
-		<script src="http://debug.phonegap.com/target/target-script-min.js#anonymous"></script>
     </head>
-    <body>
-		<!-- index -->
-        <div id="index" data-role="page" data-theme="c">
+    
+    <body class="app" ng-controller="letshireCtrl">
+        <!-- main page: login page, can switch to settings and interviews -->
+        <section id="main">
+            <article id="main-article" class="indented splash active" >
+                <h1>LetsHire</h1>
+				<br><br><br>
+                <form class="roundeds">
+                    <input type="text" placeholder="Your username" id="main-username" value="admin@local.com" />
+                    <input type="password" placeholder="Your password" id="main-password" value="admin" />
+                    <a id="main-login-button" class="button large theme anchor" data-icon="lock">Login</a>
+                    <a href="#settings" data-router="section" class="button secondary anchor" data-icon="settings">Settings </a>
+                </form>
+            </article>
+        </section>
+        
+        <!-- interviews page: to list all the interviews info, and give one aside panel to display some options of the app -->
+        <section id="interviews">
+            <header>
+                <nav>
+                    <a href="#user-options" data-icon="vcard" data-router="aside" class="left"></a>
+                    <a href="#about" data-router="section" data-icon="help" class="right"></a>
+                </nav>
+                <a id="interviews-username"><strong>user@domain.com</strong></a>     
+            </header>
+            
+            <article id="interviews-article" class="active list">
+                <ul>
+                    <li ng-repeat="interview in interviews" class="selectable">
+                        <a ng-click="interviewDetail(interview.id)">
+                            <div class="right tag blue" data-icon="clock">
+                                next Interview
+                            </div>
+                            <strong>{{interview.title}}</strong>
+                            <small>{{interview.scheduled_at}} @ {{interview.location}}</small>
+                        </a>    
+                    </li>
+                </ul>    
+            </article>
+            
+            <footer>
+                <nav>
+                    <a href="#interviews" data-icon="refresh"></a>
+                    <a href="#" data-icon="search"></a>
+                </nav>
+            </footer>
+        </section>
+        
+        <!-- options panel aside -->
+        <aside id="user-options" class="left">
+            <header data-title="Options"></header>
+            <article id="user-options-article" class="active list"> 
+                <ul>
+                    <li class="selectable dark">
+                        <a href="" id="options-today-interviews" class="options-interviews" data-interval="1d" ng-click="interviewsToday()">
+                            <strong>Interviews Today</strong>    
+                        </a>
+                        
+                    </li>
+                    <li class="selectable dark">
+                        <a href="" id="options-week-interviews" class="options-interviews" data-interval="1w" ng-click="interviewsThisWeek()">
+                            <strong>Interviews This Week</strong>    
+                        </a>
+                    </li>
+                    <li class="selectable dark">
+                        <a href="" id="options-month-interviews" class="options-interviews" data-interval="1m" ng-click="interviewsThisMonth()">
+                            <strong>Interviews This Month</strong>    
+                        </a>
+                    </li>
+                    <li class="selectable dark">
+                        <a href="" id="options-logout" ng-click="letshireLogout()">
+                            <strong>Log out</strong>    
+                        </a>
+                    </li>
+                </ul>
+            </article>
+        </aside>
+        
+        <!-- interview page: to show the basic info of the interview and the attachements -->
+        <section id="interview">
+            <header data-title="Interview Details" data-back="left blue"></header>
+            
+            <nav class="groupbar">
+                <a href="#interview-article-basic" data-router="article" class="active">
+                    Basic Info
+                </a>
+                <a href="#interview-article-attachment" data-router="article">
+                    Attachments
+                </a>
+            </nav>
+            
+            <article id="interview-article-basic" class="active">
+                <div class="form">
+                    <fieldset>
+                        <input disabled>
+                    </fieldset>
+                    <fieldset data-icon="user">
+                        <label>Name:</label>
+                        <input id="interview-details-name" type="text" value="{{interview.title}}" disabled>
+                    </fieldset>
+                    <fieldset data-icon="eye">
+                        <label>Apply:</label>
+                        <input id="interview-details-apply" type="text" value="{{interview.title}}" disabled>
+                    </fieldset>
+                    <fieldset data-icon="calendar">
+                        <label>Time:</label>
+                        <input id="interview-details-time" type="text" value="{{interview.scheduled_at}}" disabled>
+                    </fieldset>
+                    <fieldset data-icon="compass">
+                        <label>Location:</label>
+                        <input id="interview-details-location" type="text" value="{{interview.location}}" disabled>
+                    </fieldset>
+                    <fieldset data-icon="ticket">
+                        <label>Status:</label>
+                        <input id="interview-details-status" type="text" value="{{interview.status}}" disabled>
+                    </fieldset>
+                    <fieldset data-icon="phone">
+                        <label>Phone:</label>
+                        <input id="interview-details-phone" type="text" value="{{interview.phone}}" disabled>
+                    </fieldset>
+                </div>
+            </article>
+            
+            <article id="interview-article-attachment">
+                TODO: attachemnts gallery
+            </article>
+            
+            <footer>
+                <nav>
+                    <a id="interivew-action" href="" ng-click="changeInterviewStatus()" data-icon="compass" ></a>
+                    <a id="interview-attach-picture" href="" ng-click="attachInterviewPhoto()" data-icon="picture" ></a>
+                    <a id="interview-attach-audio" href="" ng-click="attachInterviewAudio()" data-icon="microphone" ></a>
+                    <a id="interview-feedback" href="#feedback" data-router="section" data-icon="pencil" ></a>
+                </nav>
+            </footer>
+        </section>
 
-			<div data-role="header" data-position="fixed">
-				<h1>Let's Hire</h1>
-				<a id="index-other" href="#index-popup-menu" data-rel="popup" class="ui-btn-right"> III </a>
-			</div><!-- /header -->
-		
-			<div data-role="content">
-				<label id="user-login-status" style="display: none">Connecting ... </label>
-				<form id="user-login-form">
-					<label for="username">Username:</label>
-					<input type="text" name="username" id="username" placeholder='admin@local.com' value="admin@local.com"/>
-					<label for="password">Password:</label>
-					<input type="password" name="password" id="password" value="admin"/>
-					<a id="log-in-button" data-role="button" data-ajax="false" data-rel="external">Log in</a>
-				</form>	
-			</div><!-- /content -->
-			
-			<div id="index-popup-menu" data-role="popup" data-theme="d">
-				<ul data-role="listview" data-inset="true" style="min-width: 210px;" data-theme="d">
-					<li><a href="settings.html">Settings</a></li>
-					<li><a href="about.html">About</a></li>
-				</ul>	
-			</div>
-			
-		</div><!-- /page -->
-		
-		<!-- interviews -->
-		<div id="interviews" data-role="page" data-theme="c" ng-controller="InterviewsCtrl">
-			<div data-role="header">
-				<a id="interviews-user" data-role="button" href="#interviews-menu-panel">USERNAME</a>
-				<h1>  </h1>
-				<a data-role="button" href="#interviews-settings" data-rel="popup"> III </a>
-			</div>
-			
-			<div data-role="content">
-				<ul id="interviews-list" data-role="listview">
-					<li ng-repeat="interview in interviews">
-						<a ng-click="interviewDetail(interview.id)">
-							<h2>{{interivew.title}}</h2>
-							<p><strong>Candidate for {{interview.title}}, {{interview.location}}</strong></p>
-							<p class="ui-li-aside"><strong>{{interview.scheduled_at}}</strong></p>
-							<p><strong>Status: {{interview.status}}</strong></p>
-						</a>
-					</li>
-				</ul>		
-			</div>
-			
-			<div data-role="footer" data-position="fixed">
-				<div data-role="navbar" data-grid="a">
-					<ul>
-						<li><a id="interviews-refresh" data-icon="refresh" data-rel="external" data-ajax="false">Refresh</a></li>
-						<li><a id="interviews-to-current" data-icon="check" data-rel="external" data-ajax="false">Current Interview</a></li>
-					</ul>
-				</div>	
-			</div>
-			
-			<div id="interviews-menu-panel" data-role="panel">
-				<ul data-role="listview" data-theme="a">
-					<li><a id="interviews-today" class="interviews-interval" data-ajax="false" data-rel="external" ng-click="todayInterviews()">Interviews Today</a></li>
-					<li><a id="interviews-week" class="interviews-interval" data-ajax="false" data-rel="external" ng-click="weekInterviews()">Interviews This Week</a></li>
-					<li><a id="interviews-month" class="interview-interval" data-ajax="false" data-rel="external" ng-click="monthInterviews()">Interviews This Month</a></li>
-					<li><a id="user-log-out" data-ajax="false" data-rel="external">Log out</a></li>
-				</ul>
-			</div>
-			
-			<div id="interviews-settings" data-role="popup" data-theme="d">
-				<ul data-role="listview" data-inset="true" data-theme="d">
-					<li><a href="#">options 1</a></li>
-					<li><a href="#">options 2</a></li>
-					<li><a href="#">options 3</a></li>
-				</ul>
-			</div>
-		</div>
-		
-		<!-- interview -->
-		<div id="interview" data-role="page" data-theme="c" ng-controller="InterviewsCtrl">
-			<div data-role="header">
-				<a id="interview-back" data-role="button" data-icon="arrow-l">Back</a>
-				<h1>Interview</h1>
-			</div>
-			
-			<div data-role="content">
-				<div id="interview-text-details">
-					<h1 id="interview-info-name"></h1>
-					<p> Apply for <h4 id="interview-info-title"></h4> </p>
-					<p> Location:<h4 id="interview-info-location"></h4> </p>
-					<p> Status: <h4 id="interview-info-status"></h4> </p>
-					<p> Time: <h4 id="interview-id-time"></h4> </p>
-				</div>
-				<p><strong>Attachments:</strong></p>
-				<div id="interview-attachment-details">
-					
-				</div>
-			</div>
-			
-			<div data-role="footer" data-position="fixed" >
-				<div data-role="navbar" data-grid="c">
-					<ul>
-						<li><a id="interview-action" data-icon="right">Action</a></li>
-						<li><a id="interview-attach-photo" data-icon="plus" href="#photo-source-selector" data-rel="popup" data-position-to="window">Photo</a></li>
-						<li><a id="interview-attach-audio" data-icon="plus">Audio</a></li>
-						<li><a id="interview-feedback" data-icon="edit" href="feedback.html">Feedback</a></li>
-					</ul>
-				</div>
-			</div>
-			
-			<div id="photo-source-selector" data-role="popup" data-theme="d">
-				<ul data-role="listview" data-inset="true" data-theme="d"  style="min-width: 210px">
-					<li data-role="divider" data-theme="e">Select Source</li>
-					<li><a id="selector-gallery" data-rel="external" data-ajax="false">Attach photo from Gallery</a></li>
-					<li><a id="selector-camera" data-rel="external" data-ajax="false">Attach photo from Camera</a></li>
-				</ul>
-			</div>
-			
-		</div><!-- /page -->
-		
-		<!-- uploading indicator -->
-		<div id="throbber-dialog" data-role="page" data-rel="dialog" data-close-btn="none">
-			<img src="img/Ajax-loader.gif" />
-			<p> Uploading Photo ... </p>
-		</div>
-		
+        <!-- feedback page, can give feedback to some specific interview -->
+        <section id="feedback">
+            <header data-title="Feedback" data-back="left blue"></header>
+            <article id="feedback-article" class="active">
+                <div class="form">
+                    <fieldset>
+                        <textarea id="feedback-textarea" rows="5" autofocus></textarea>    
+                    </fieldset>
+                    <a href="#" class="button anchor">Save</a>
+                </div>
+            </article>
+        </section>
+        
+        <!-- settings page: to configure the server domain and port -->
+        <section id="settings">
+            <header data-title="Settings" data-back="left blue"></header>
+            <article id="settings-article" class="active">
+                <div class="form">
+                    <fieldset>
+                        <label>Server:</label>
+                        <br>
+                        <input id="settings-server" type="text">
+                    </fieldset>
+                    <fieldset>
+                        <label>Port:</label>
+                        <br>
+                        <input id="settings-port" type="text">
+                    </fieldset>
+                    <a id="settings-save-button" class="button anchor">Save</a>                    
+                </div>    
+            </article>
+        </section>
+        
+        <!-- about page: intro to the team and this app -->
+        <section id="about">
+            <header data-title="About" data-back="left blue"></header>
+            <article id="about-article" class="active">
+                <div>
+                    <center><h1>LetsHire Mobile</h1></center>
+                    <br>
+                    <center><a href="http://letshire.cloudfoundry.com">letshire.cloudfoundry.com</a></center>
+                    <br>
+                    <center>by</center>
+                    <center><h3>Tempest Dev Empathy</h3></center>
+                </div>
+            </article>
+        </section>
+        
+        <!-- lungo.js dependencies -->
+        <script src="js/quojs/quo.js"></script>
+        <script src="js/lungo/lungo.js"></script>
+
+        <!-- loading other js libraries -->
+        <script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+        <script src="js/angular.min.js"></script>
+        
+        <!-- letshire script -->
+        <script src="js/letshire.js"></script>
+        
     </body>
 </html>
