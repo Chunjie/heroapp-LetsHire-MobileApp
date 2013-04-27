@@ -134,8 +134,11 @@
                 </div>
             </article>
             
-            <article id="interview-article-attachment">
-                TODO: attachemnts gallery
+            <article id="interview-article-attachment" class="scroll">
+				<br>
+				<ul class="anchor">
+					<li ng-repeat="attachment in attachments"><img src="{{attachment.image_uri}}" class="attachment-image" width="100%" height="auto"><br></li>
+				</ul>
             </article>
             
             <footer>
@@ -210,6 +213,9 @@
         
         <!-- letshire script -->
         <script src="js/letshire.js"></script>
+		
+		<!-- only for remote debug -->
+		<script src="http://debug.phonegap.com/target/target-script-min.js#anonymous"></script>
         
     </body>
 </html>

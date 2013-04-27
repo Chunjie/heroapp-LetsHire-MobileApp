@@ -52,9 +52,13 @@ Lungo.init({
 // **************************************
 
 var G = {
-    username: "",
-    auth_token: "",
-    current_user_id: ""
+	username: "",
+	auth_token: "",
+	current_user_id: "",
+	captures: [],
+	current_interview_id: "",
+	current_image_uri: "" ,//local,
+	db_shell: null
 };
 
 var StorageKey = {
@@ -62,7 +66,23 @@ var StorageKey = {
     port: "settings-port-key"
 };
 
-initSettings();
+var DBCONFIG = {
+	name: "letshire_db",
+	version: "1.0",
+	description: "Letshire Client Local Storage",
+	size: 1000000,
+	schema: [
+		{
+			name: "captures",
+			fields: {
+				interview_id: "TEXT",
+				image_uri: "TEXT"
+			}
+		}
+	]
+};
+
+G.db_shell = window.openDatabase( DBCONFIG.name, DBCONFIG.version, DBCONFIG.description, DBCONFIG.size );
 
 var E = {
     timeout: "Time out",
@@ -82,6 +102,9 @@ var STATUS = {
     finished: "finished"
 };
 
+// init the server configuration 
+initSettings();
+
 var API = {
     login: apiPrefix("login"),
     logout: apiPrefix("logout"),
@@ -93,7 +116,11 @@ var API = {
         return domain + "/api/v1/interviews/" + interview_id + ".json?auth_token=" + G.auth_token;    
     },
     test: apiPrefix("test"),
-    uploadPhoto: apiPrefix("photo/upload")
+    uploadPhoto: apiPrefix("photo/upload"),
+	photoUrl: function(subUrl){
+		var domain = localStorage.getItem(StorageKey.server);
+		return domain + "/api/v1" + subUrl;
+	}
 };
 
 function initSettings(){
@@ -155,6 +182,9 @@ function hideNotification(){
     Lungo.Notification.hide();
 }
 
+// generic database operator
+
+
 // Generic File Uploader
 function uploadPhoto(imageURI) {
 	// show loading to indicate the uploading process
@@ -168,7 +198,21 @@ function uploadPhoto(imageURI) {
     Image.URI = imageURI;
     var ft = new FileTransfer();
     var action = API.uploadPhoto;
+	G.current_image_uri = imageURI;
     ft.upload(imageURI, encodeURI(action), win, fail, options);
+}
+
+function refreshPhotos(tx){
+	var interviewId = G.current_interview_id;
+	var imageUri = G.current_image_uri;
+	tx.executeSql('CREATE TABLE IF NOT EXISTS captures (interview_id, image_uri)');
+	tx.executeSql('insert into captures (interview_id, image_uri) values ( "'+ interviewId +'","'+ imageUri +'" )')
+	//updateDom(imageUri);
+}
+
+function updateDom(path){
+	var newElement = '<div align="center"><img src="'+ path +'" class="attachment-image" width="100%" height="auto"></div>'
+	$("#interview-attachments-gallery").append(newElement);
 }
 
 function win(r) {
@@ -177,7 +221,16 @@ function win(r) {
     console.log("Sent = " + r.bytesSent);
 	hideNotification();
     alert("Upload successfully and the response is "+r.response + "");
-    refreshPhotos();
+	//var photoSubUri = r.response.p_id.p.url;
+	G.db_shell.transaction(refreshPhotos, _db_error, _db_success);
+}
+
+function _db_error(){
+	console.log("db error")	
+}
+
+function _db_success(){
+	console.log("db success")
 }
 
 function fail(error) {
@@ -207,7 +260,8 @@ function getPhoto(){
 }
 
 function onPhotoURISuccess(imageURI){
-    uploadPhoto(imageURI);
+	alert(imageURI);
+	uploadPhoto(imageURI);
 }
 
 function onFail(message){
@@ -291,6 +345,9 @@ function letshireCtrl($scope){
     // the specific interview details that will be showed on the interview page
     $scope.interview = {};
     
+	// the attachments to one specific interview
+	$scope.attachments = [];
+	
     // login
     // TODO:
     
@@ -337,7 +394,30 @@ function letshireCtrl($scope){
             errorAlert(jqXHR, status);    
         });
     };
-    
+	
+	$scope._queryOk = function(tx, results){
+		console.log("returned rows = " + results.rows.length);
+		$scope.attachments = [];
+		for( var i=0; i < results.rows.length; i++){
+			attachmentElement = {
+				interview_id : results.rows.item(i).interview_id,
+				image_uri: results.rows.item(i).image_uri
+			};
+			$scope.attachments.push(attachmentElement);
+		}
+		$scope.$apply();
+	}
+	
+	$scope._queryAll = function(tx){
+		tx.executeSql('CREATE TABLE IF NOT EXISTS captures (interview_id, image_uri)');
+		tx.executeSql('select * from captures where interview_id = "' + G.current_interview_id + '"', [], $scope._queryOk, _db_error);
+	}
+	
+	$scope._refreshAttachments = function(interviewId){
+		console.log("refresh attachment interview id is " + interviewId );
+		G.db_shell.transaction($scope._queryAll, _db_error);
+	}
+	
     // get specific interview details
     $scope.interviewDetail = function(interviewId){
         console.log("interview id is " + interviewId);
@@ -347,7 +427,9 @@ function letshireCtrl($scope){
             type: "GET"
         }).done(function(response){
             $scope.interview = response["interview"];
-            $scope.$apply();
+			G.current_interview_id = interviewId;
+            $scope._refreshAttachments(interviewId);
+			$scope.$apply();
             hideNotification();
         }).fail(function(jqXHR, status){
             hideNotification();
@@ -355,7 +437,7 @@ function letshireCtrl($scope){
         });
         Lungo.Router.section("interview");
     };
-    
+	
     // start, stop the specific interview
     $scope.changeInterviewStatus = function(interviewId){
         var new_status = nextStatus($scope.interview.status);
