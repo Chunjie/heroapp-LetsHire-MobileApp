@@ -140,7 +140,7 @@
             
             <footer>
                 <nav>
-                    <a id="interivew-action" href="" ng-click="changeInterviewStatus()" data-icon="compass" ></a>
+                    <a id="interivew-action" href="" ng-click="changeInterviewStatus(interview.id)" data-icon="compass" ></a>
                     <a id="interview-attach-picture" href="" ng-click="attachInterviewPhoto()" data-icon="picture" ></a>
                     <a id="interview-attach-audio" href="" ng-click="attachInterviewAudio()" data-icon="microphone" ></a>
                     <a id="interview-feedback" href="#feedback" data-router="section" data-icon="pencil" ></a>
@@ -196,6 +196,10 @@
             </article>
         </section>
         
+		
+		<!-- phonegap main library -->
+		<script type="text/javascript" src="cordova-2.5.0.js"></script>
+		
         <!-- lungo.js dependencies -->
         <script src="js/quojs/quo.js"></script>
         <script src="js/lungo/lungo.js"></script>

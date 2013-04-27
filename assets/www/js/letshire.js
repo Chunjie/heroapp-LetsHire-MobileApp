@@ -37,7 +37,7 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-    	alert("device ready");
+    	//alert("device ready");
     }
 };
 
@@ -157,6 +157,9 @@ function hideNotification(){
 
 // Generic File Uploader
 function uploadPhoto(imageURI) {
+	// show loading to indicate the uploading process
+	showLoading();
+	
     var options = new FileUploadOptions();
     options.fileKey  = "file";
     options.fileName = imageURI.substr(imageURI.lastIndexOf('/')+1);
@@ -164,7 +167,7 @@ function uploadPhoto(imageURI) {
     Image.filename = options.fileName;
     Image.URI = imageURI;
     var ft = new FileTransfer();
-    var action = api_url(A.photo.upload);
+    var action = API.uploadPhoto;
     ft.upload(imageURI, encodeURI(action), win, fail, options);
 }
 
@@ -172,13 +175,13 @@ function win(r) {
     console.log("Code = " + r.responseCode);
     console.log("Response = " + r.response);
     console.log("Sent = " + r.bytesSent);
-    stopThrobber();
+	hideNotification();
     alert("Upload successfully and the response is "+r.response + "");
     refreshPhotos();
 }
 
 function fail(error) {
-    stopThrobber();
+	hideNotification();
     alert("An error has occurred: Code = " + error.code);
     console.log("upload error source " + error.source);
     console.log("upload error target " + error.target);
@@ -189,7 +192,7 @@ function capturePhoto(){
     navigator.camera.getPicture(onPhotoURISuccess, onFail, {
         quality: 50,
         destinationType: navigator.camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.CAMERA,
+        sourceType: navigator.camera.PictureSourceType.CAMERA,
         saveToPhotoAlbums: true
     });
 }
@@ -198,7 +201,7 @@ function getPhoto(){
     navigator.camera.getPicture(onPhotoURISuccess, onFail, {
         quality: 50,
         destinationType: navigator.camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
         saveToPhotoAlbums: true
     });        
 }
@@ -232,17 +235,19 @@ var pullInterviewsList = new Lungo.Element.Pull("#interviews-article",{
 });
 
 // settings
-// TODO: checking animation
 $("#settings-save-button").on("click", function(e){
     var serverDomain = $("input#settings-server").val();
     var serverPort = $("input#settings-port").val();
+	showLoading();
     $.ajax({
         type: "GET",
         url: serverDomain + "/api/v1/test"
     }).done(function(response){
-        saveSettings();
+        hideNotification();
+		saveSettings();
         Lungo.Router.section("main");
     }).fail(function(jqXHR, status){
+		hideNotification();
         errorAlert(jqXHR, status)
     });
 });
@@ -352,14 +357,30 @@ function letshireCtrl($scope){
     };
     
     // start, stop the specific interview
-    $scope.changeInterviewStatus = function(){
+    $scope.changeInterviewStatus = function(interviewId){
         var new_status = nextStatus($scope.interview.status);
-        alert(new_status);
+        var form_data = {"interview" : { "status" : new_status }}
+		showLoading();
+		$.ajax({
+			url: API.interview(interviewId),
+			type: "PUT",
+			dataType: "json",
+			processData: false,
+			contentType: "application/json",
+			data: JSON.stringify(form_data)
+		}).done(function(response){
+			$scope.interview = response["interview"];
+			$scope.$apply();
+			hideNotification();
+		}).fail(function(jqXHR, status){
+			hideNotification();
+			errorAlert(jqXHR, status);
+		})
     };
     
     // attach photo callback
     $scope.attachInterviewPhoto = function(){
-       capturePhoto();
+	    capturePhoto();
     };
     
     // attach audio callback
