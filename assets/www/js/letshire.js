@@ -37,7 +37,7 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-    	//alert("device ready");
+        //alert("device ready");
     }
 };
 
@@ -52,13 +52,13 @@ Lungo.init({
 // **************************************
 
 var G = {
-	username: "",
-	auth_token: "",
-	current_user_id: "",
-	captures: [],
-	current_interview_id: "",
-	current_image_uri: "" ,//local,
-	db_shell: null
+    username: "",
+    auth_token: "",
+    current_user_id: "",
+    captures: [],
+    current_interview_id: "",
+    current_image_uri: "" ,//local,
+    db_shell: null
 };
 
 var StorageKey = {
@@ -67,19 +67,19 @@ var StorageKey = {
 };
 
 var DBCONFIG = {
-	name: "letshire_db",
-	version: "1.0",
-	description: "Letshire Client Local Storage",
-	size: 1000000,
-	schema: [
-		{
-			name: "captures",
-			fields: {
-				interview_id: "TEXT",
-				image_uri: "TEXT"
-			}
-		}
-	]
+    name: "letshire_db",
+    version: "1.0",
+    description: "Letshire Client Local Storage",
+    size: 1000000,
+    schema: [
+        {
+            name: "captures",
+            fields: {
+                interview_id: "TEXT",
+                image_uri: "TEXT"
+            }
+        }
+    ]
 };
 
 G.db_shell = window.openDatabase( DBCONFIG.name, DBCONFIG.version, DBCONFIG.description, DBCONFIG.size );
@@ -117,13 +117,13 @@ var API = {
     },
     test: apiPrefix("test"),
     uploadPhoto: function(interview_Id){
-		var domain = apiPrefix("photo/upload") + "&interview_id=" + interview_Id;
-		return domain;
-	},
-	photoUrl: function(subUrl){
-		var domain = localStorage.getItem(StorageKey.server);
-		return domain + "/api/v1" + subUrl;
-	}
+        var domain = apiPrefix("photo/upload") + "&interview_id=" + interview_Id;
+        return domain;
+    },
+    photoUrl: function(subUrl){
+        var domain = localStorage.getItem(StorageKey.server);
+        return domain + "/api/v1" + subUrl;
+    }
 };
 
 function initSettings(){
@@ -190,9 +190,9 @@ function hideNotification(){
 
 // Generic File Uploader
 function uploadPhoto(imageURI) {
-	// show loading to indicate the uploading process
-	showLoading();
-	
+    // show loading to indicate the uploading process
+    showLoading();
+    
     var options = new FileUploadOptions();
     options.fileKey  = "file";
     options.fileName = imageURI.substr(imageURI.lastIndexOf('/')+1);
@@ -201,43 +201,43 @@ function uploadPhoto(imageURI) {
     Image.URI = imageURI;
     var ft = new FileTransfer();
     var action = API.uploadPhoto(G.current_interview_id);
-	G.current_image_uri = imageURI;
+    G.current_image_uri = imageURI;
     ft.upload(imageURI, encodeURI(action), win, fail, options);
 }
 
 function refreshPhotos(tx){
-	var interviewId = G.current_interview_id;
-	var imageUri = G.current_image_uri;
-	tx.executeSql('CREATE TABLE IF NOT EXISTS captures (interview_id, image_uri)');
-	tx.executeSql('insert into captures (interview_id, image_uri) values ( "'+ interviewId +'","'+ imageUri +'" )')
-	//updateDom(imageUri);
+    var interviewId = G.current_interview_id;
+    var imageUri = G.current_image_uri;
+    tx.executeSql('CREATE TABLE IF NOT EXISTS captures (interview_id, image_uri)');
+    tx.executeSql('insert into captures (interview_id, image_uri) values ( "'+ interviewId +'","'+ imageUri +'" )')
+    //updateDom(imageUri);
 }
 
 function updateDom(path){
-	var newElement = '<div align="center"><img src="'+ path +'" class="attachment-image" width="100%" height="auto"></div>'
-	$("#interview-attachments-gallery").append(newElement);
+    var newElement = '<div align="center"><img src="'+ path +'" class="attachment-image" width="100%" height="auto"></div>'
+    $("#interview-attachments-gallery").append(newElement);
 }
 
 function win(r) {
     console.log("Code = " + r.responseCode);
     console.log("Response = " + r.response);
     console.log("Sent = " + r.bytesSent);
-	hideNotification();
+    hideNotification();
     alert("Upload successfully and the response is "+r.response + "");
-	//var photoSubUri = r.response.p_id.p.url;
-	G.db_shell.transaction(refreshPhotos, _db_error, _db_success);
+    //var photoSubUri = r.response.p_id.p.url;
+    G.db_shell.transaction(refreshPhotos, _db_error, _db_success);
 }
 
 function _db_error(){
-	console.log("db error")	
+    console.log("db error")	
 }
 
 function _db_success(){
-	console.log("db success")
+    console.log("db success")
 }
 
 function fail(error) {
-	hideNotification();
+    hideNotification();
     alert("An error has occurred: Code = " + error.code);
     console.log("upload error source " + error.source);
     console.log("upload error target " + error.target);
@@ -263,8 +263,8 @@ function getPhoto(){
 }
 
 function onPhotoURISuccess(imageURI){
-	alert(imageURI);
-	uploadPhoto(imageURI);
+    alert(imageURI);
+    uploadPhoto(imageURI);
 }
 
 function onFail(message){
@@ -282,29 +282,29 @@ Lungo.dom("#settings").on("load", function(event){
 
 
 var pullInterviewsList = new Lungo.Element.Pull("#interviews-article",{
-	onPull: "Pull down to refresh.",
-	onRelease: "Release to get new data",
-	onRefresh: "Refreshing...",
-	callback: function(){
-		//TODO: to refresh the data
-		pullInterviewsList.hide();
-	}
+    onPull: "Pull down to refresh.",
+    onRelease: "Release to get new data",
+    onRefresh: "Refreshing...",
+    callback: function(){
+        //TODO: to refresh the data
+        pullInterviewsList.hide();
+    }
 });
 
 // settings
 $("#settings-save-button").on("click", function(e){
     var serverDomain = $("input#settings-server").val();
     var serverPort = $("input#settings-port").val();
-	showLoading();
+    showLoading();
     $.ajax({
         type: "GET",
         url: serverDomain + "/api/v1/test"
     }).done(function(response){
         hideNotification();
-		saveSettings();
+        saveSettings();
         Lungo.Router.section("main");
     }).fail(function(jqXHR, status){
-		hideNotification();
+        hideNotification();
         errorAlert(jqXHR, status)
     });
 });
@@ -315,7 +315,7 @@ $("#main-login-button").on("click", function(e){
     var password = $("input#main-password").val();
     var formData = {"user" : { "email": username, "password": password }}
     
-    showLoading("Signing in ...")
+    showLoading("Signing in ...");
     
     $.ajax({
         type: "POST",
@@ -348,10 +348,10 @@ function letshireCtrl($scope){
     // the specific interview details that will be showed on the interview page
     $scope.interview = {};
     $scope.candidate = {};
-	$scope.opening = {};
-	// the attachments to one specific interview
-	$scope.attachments = [];
-	
+    $scope.opening = {};
+    // the attachments to one specific interview
+    $scope.attachments = [];
+    
     // login
     // TODO:
     
@@ -398,30 +398,30 @@ function letshireCtrl($scope){
             errorAlert(jqXHR, status);    
         });
     };
-	
-	$scope._queryOk = function(tx, results){
-		console.log("returned rows = " + results.rows.length);
-		$scope.attachments = [];
-		for( var i=0; i < results.rows.length; i++){
-			attachmentElement = {
-				interview_id : results.rows.item(i).interview_id,
-				image_uri: results.rows.item(i).image_uri
-			};
-			$scope.attachments.push(attachmentElement);
-		}
-		$scope.$apply();
-	}
-	
-	$scope._queryAll = function(tx){
-		tx.executeSql('CREATE TABLE IF NOT EXISTS captures (interview_id, image_uri)');
-		tx.executeSql('select * from captures where interview_id = "' + G.current_interview_id + '"', [], $scope._queryOk, _db_error);
-	}
-	
-	$scope._refreshAttachments = function(interviewId){
-		console.log("refresh attachment interview id is " + interviewId );
-		G.db_shell.transaction($scope._queryAll, _db_error);
-	}
-	
+    
+    $scope._queryOk = function(tx, results){
+        console.log("returned rows = " + results.rows.length);
+        $scope.attachments = [];
+        for( var i=0; i < results.rows.length; i++){
+            attachmentElement = {
+                interview_id : results.rows.item(i).interview_id,
+                image_uri: results.rows.item(i).image_uri
+            };
+            $scope.attachments.push(attachmentElement);
+        }
+        $scope.$apply();
+    }
+    
+    $scope._queryAll = function(tx){
+        tx.executeSql('CREATE TABLE IF NOT EXISTS captures (interview_id, image_uri)');
+        tx.executeSql('select * from captures where interview_id = "' + G.current_interview_id + '"', [], $scope._queryOk, _db_error);
+    }
+    
+    $scope._refreshAttachments = function(interviewId){
+        console.log("refresh attachment interview id is " + interviewId );
+        G.db_shell.transaction($scope._queryAll, _db_error);
+    }
+    
     // get specific interview details
     $scope.interviewDetail = function(interviewId){
         console.log("interview id is " + interviewId);
@@ -431,11 +431,11 @@ function letshireCtrl($scope){
             type: "GET"
         }).done(function(response){
             $scope.interview = response["interview"];
-			$scope.candidate = response["candidate"];
-			$scope.opening = response["opening"];
-			G.current_interview_id = interviewId;
+            $scope.candidate = response["candidate"];
+            $scope.opening = response["opening"];
+            G.current_interview_id = interviewId;
             $scope._refreshAttachments(interviewId);
-			$scope.$apply();
+            $scope.$apply();
             hideNotification();
         }).fail(function(jqXHR, status){
             hideNotification();
@@ -443,34 +443,34 @@ function letshireCtrl($scope){
         });
         Lungo.Router.section("interview");
     };
-	
+    
     // start, stop the specific interview
     $scope.changeInterviewStatus = function(interviewId){
         var new_status = nextStatus($scope.interview.status);
         var form_data = {"interview" : { "status" : new_status }}
-		showLoading();
-		$.ajax({
-			url: API.interview(interviewId),
-			type: "PUT",
-			dataType: "json",
-			processData: false,
-			contentType: "application/json",
-			data: JSON.stringify(form_data)
-		}).done(function(response){
-			$scope.interview = response["interview"];
-			$scope.candidate = response["candidate"];
-			$scope.opening = response["opening"];
-			$scope.$apply();
-			hideNotification();
-		}).fail(function(jqXHR, status){
-			hideNotification();
-			errorAlert(jqXHR, status);
-		})
+        showLoading();
+        $.ajax({
+            url: API.interview(interviewId),
+            type: "PUT",
+            dataType: "json",
+            processData: false,
+            contentType: "application/json",
+            data: JSON.stringify(form_data)
+        }).done(function(response){
+            $scope.interview = response["interview"];
+            $scope.candidate = response["candidate"];
+            $scope.opening = response["opening"];
+            $scope.$apply();
+            hideNotification();
+        }).fail(function(jqXHR, status){
+            hideNotification();
+            errorAlert(jqXHR, status);
+        })
     };
     
     // attach photo callback
     $scope.attachInterviewPhoto = function(){
-	    capturePhoto();
+        capturePhoto();
     };
     
     // attach audio callback

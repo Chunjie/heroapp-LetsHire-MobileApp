@@ -17,7 +17,7 @@
         <section id="main">
             <article id="main-article" class="indented splash active" >
                 <h1>LetsHire</h1>
-				<br><br><br>
+                <br><br><br>
                 <form class="roundeds">
                     <input type="text" placeholder="Your username" id="main-username" value="admin@local.com" />
                     <input type="password" placeholder="Your password" id="main-password" value="admin" />
@@ -131,18 +131,18 @@
                         <label>Phone:</label>
                         <input id="interview-details-phone" type="text" value="{{candidate.phone}}" disabled>
                     </fieldset>
-					<fieldset data-icon="">
-						<label>Email:</label>
-						<input id="interview-details-email" type="text" value="{{candidate.email}}" disabled>
-					</fieldset>
+                    <fieldset data-icon="">
+                    <label>Email:</label>
+                        <input id="interview-details-email" type="text" value="{{candidate.email}}" disabled>
+                    </fieldset>
                 </div>
             </article>
             
             <article id="interview-article-attachment" class="scroll">
-				<br>
-				<ul class="anchor">
-					<li ng-repeat="attachment in attachments"><img src="{{attachment.image_uri}}" class="attachment-image" width="100%" height="auto"><br></li>
-				</ul>
+                <br>
+                <ul class="anchor">
+                    <li ng-repeat="attachment in attachments"><img src="{{attachment.image_uri}}" class="attachment-image" width="100%" height="auto"><br></li>
+                </ul>
             </article>
             
             <footer>
@@ -203,10 +203,10 @@
             </article>
         </section>
         
-		
-		<!-- phonegap main library -->
-		<script type="text/javascript" src="cordova-2.5.0.js"></script>
-		
+        
+        <!-- phonegap main library -->
+        <script type="text/javascript" src="cordova-2.5.0.js"></script>
+        
         <!-- lungo.js dependencies -->
         <script src="js/quojs/quo.js"></script>
         <script src="js/lungo/lungo.js"></script>
@@ -217,9 +217,9 @@
         
         <!-- letshire script -->
         <script src="js/letshire.js"></script>
-		
-		<!-- only for remote debug -->
-		<!--<script src="http://192.168.1.101:9090/target/target-script-min.js#anonymous"></script>-->
+        
+        <!-- only for remote debug -->
+        <!--<script src="http://192.168.1.101:9090/target/target-script-min.js#anonymous"></script>-->
         
     </body>
 </html>
