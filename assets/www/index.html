@@ -109,11 +109,11 @@
                     </fieldset>
                     <fieldset data-icon="user">
                         <label>Name:</label>
-                        <input id="interview-details-name" type="text" value="{{interview.title}}" disabled>
+                        <input id="interview-details-name" type="text" value="{{candidate.name}}" disabled>
                     </fieldset>
                     <fieldset data-icon="eye">
                         <label>Apply:</label>
-                        <input id="interview-details-apply" type="text" value="{{interview.title}}" disabled>
+                        <input id="interview-details-apply" type="text" value="{{opening.title}}" disabled>
                     </fieldset>
                     <fieldset data-icon="calendar">
                         <label>Time:</label>
@@ -129,8 +129,12 @@
                     </fieldset>
                     <fieldset data-icon="phone">
                         <label>Phone:</label>
-                        <input id="interview-details-phone" type="text" value="{{interview.phone}}" disabled>
+                        <input id="interview-details-phone" type="text" value="{{candidate.phone}}" disabled>
                     </fieldset>
+					<fieldset data-icon="">
+						<label>Email:</label>
+						<input id="interview-details-email" type="text" value="{{candidate.email}}" disabled>
+					</fieldset>
                 </div>
             </article>
             
@@ -215,7 +219,7 @@
         <script src="js/letshire.js"></script>
 		
 		<!-- only for remote debug -->
-		<script src="http://debug.phonegap.com/target/target-script-min.js#anonymous"></script>
+		<!--<script src="http://192.168.1.101:9090/target/target-script-min.js#anonymous"></script>-->
         
     </body>
 </html>

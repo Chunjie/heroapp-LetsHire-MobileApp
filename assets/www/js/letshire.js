@@ -113,10 +113,13 @@ var API = {
     },
     interview: function(interview_id){
         var domain = localStorage.getItem(StorageKey.server);
-        return domain + "/api/v1/interviews/" + interview_id + ".json?auth_token=" + G.auth_token;    
+        return domain + "/api/v1/interviews/" + interview_id + ".json?auth_token=" + G.auth_token + "&candidate=1";    
     },
     test: apiPrefix("test"),
-    uploadPhoto: apiPrefix("photo/upload"),
+    uploadPhoto: function(interview_Id){
+		var domain = apiPrefix("photo/upload") + "&interview_id=" + interview_Id;
+		return domain;
+	},
 	photoUrl: function(subUrl){
 		var domain = localStorage.getItem(StorageKey.server);
 		return domain + "/api/v1" + subUrl;
@@ -197,7 +200,7 @@ function uploadPhoto(imageURI) {
     Image.filename = options.fileName;
     Image.URI = imageURI;
     var ft = new FileTransfer();
-    var action = API.uploadPhoto;
+    var action = API.uploadPhoto(G.current_interview_id);
 	G.current_image_uri = imageURI;
     ft.upload(imageURI, encodeURI(action), win, fail, options);
 }
@@ -344,7 +347,8 @@ function letshireCtrl($scope){
     
     // the specific interview details that will be showed on the interview page
     $scope.interview = {};
-    
+    $scope.candidate = {};
+	$scope.opening = {};
 	// the attachments to one specific interview
 	$scope.attachments = [];
 	
@@ -427,6 +431,8 @@ function letshireCtrl($scope){
             type: "GET"
         }).done(function(response){
             $scope.interview = response["interview"];
+			$scope.candidate = response["candidate"];
+			$scope.opening = response["opening"];
 			G.current_interview_id = interviewId;
             $scope._refreshAttachments(interviewId);
 			$scope.$apply();
@@ -452,6 +458,8 @@ function letshireCtrl($scope){
 			data: JSON.stringify(form_data)
 		}).done(function(response){
 			$scope.interview = response["interview"];
+			$scope.candidate = response["candidate"];
+			$scope.opening = response["opening"];
 			$scope.$apply();
 			hideNotification();
 		}).fail(function(jqXHR, status){
