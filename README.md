@@ -1,4 +1,4 @@
-heroapp: LetsHire MobileApp
+#heroapp: LetsHire MobileApp
 
 ###PhoneGap
 1. Getting Started with Android  
@@ -16,7 +16,7 @@ heroapp: LetsHire MobileApp
 5. 	Wiki  
 	https://github.com/phonegap/phonegap/wiki
 
-###JQuery Mobile
+###JQuery Mobile (deprecated)
 1. Quick start guide  
 	http://jquerymobile.com/demos/1.2.1/docs/about/getting-started.html
 2. Themes:
@@ -27,6 +27,18 @@ heroapp: LetsHire MobileApp
 4. More documents  
 	http://jquerymobile.com/demos/1.2.1/
 
+###Lungo.js
+We use [Lungo.js](http://lungo.tapquo.com/) as the main UI library, refer to this [introduction](http://lungo.tapquo.com/howto/prototype/)
+
+###Angular.js
+[Angular.js](http://angularjs.org/) is used as our data manipulator.
+
+###How to debug
+1. use chrome developer tools to debug the basic feature without phonegap native api.
+2. use [Ripple](https://chrome.google.com/webstore/detail/ripple-emulator-beta/geelfhphabnejjhdalkjhgipohgpdnoc?hl=en) emulator
+3. use [weinre](http://people.apache.org/~pmuellr/weinre/docs/latest/Home.html) to remote debug it
+
+refer to this [intro](https://github.com/phonegap/phonegap/wiki/Debugging-in-PhoneGap) to get your hammer
 
 ###Project File Structure
 The codes we wrote are in the assets/www/ dir:
@@ -34,13 +46,13 @@ The codes we wrote are in the assets/www/ dir:
 * css/ : css file
 * img/	: the logo or icons
 * js/	: javascript files
-* js/index.js : our business logic
-* js/jquery.mobile.android-theme.js: jquery mobile android theme
+* ~~js/index.js~~ js/letshire.js : our business logic
+* ~~js/jquery.mobile.android-theme.js: jquery mobile android theme~~
 * themes/android-theme.css
-* index.html : app home page
-* interview.html : one interview page
-* interviews.html : my interviews
-* login.html : login page
-* settings.html : settings page
+* index.html : app home page, including interviews, interview, settings and other 'pages'
+* ~~interview.html : one interview page~~ 
+* ~~interviews.html : my interviews~~
+* ~~login.html : login page~~
+* ~~settings.html : settings page~~
 *   
-* lets-hire-api-app/ : the fake backend api based on sinatra
+* ~~lets-hire-api-app/ : the fake backend api based on sinatra~~ we will use the real api 
