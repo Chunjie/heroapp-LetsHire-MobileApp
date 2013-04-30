@@ -309,37 +309,6 @@ $("#settings-save-button").on("click", function(e){
     });
 });
 
-// login
-$("#main-login-button").on("click", function(e){
-    var username = $("input#main-username").val();
-    var password = $("input#main-password").val();
-    var formData = {"user" : { "email": username, "password": password }}
-    
-    showLoading("Signing in ...");
-    
-    $.ajax({
-        type: "POST",
-        url: API.login,
-        dataType: "json",
-        processData: false,
-        data: JSON.stringify(formData),
-        contentType: "application/json"
-    }).done(function(response){
-        hideNotification();
-        // store session info
-        G.auth_token = response["session"]["auth_token"];
-        G.username = username;
-        G.current_user_id = response["user_id"];
-        // update some info ui
-        $("#interviews-username").text(G.username);
-        // navigate
-        Lungo.Router.section("interviews");
-    }).fail(function(jqXHR, status){
-        hideNotification();
-        errorAlert(jqXHR, status);
-    });
-});
-
 function letshireCtrl($scope){
     
     // the interviews will be showed on the interviews page
@@ -353,7 +322,37 @@ function letshireCtrl($scope){
     $scope.attachments = [];
     
     // login
-    // TODO:
+    $scope.userLogin = function(){
+        var username = $("input#main-username").val();
+        var password = $("input#main-password").val();
+        var formData = {"user" : { "email": username, "password": password }}
+        
+        showLoading("Signing in ...");
+        
+        $.ajax({
+            type: "POST",
+            url: API.login,
+            dataType: "json",
+            processData: false,
+            data: JSON.stringify(formData),
+            contentType: "application/json"
+        }).done(function(response){
+            hideNotification();
+            // store session info
+            G.auth_token = response["session"]["auth_token"];
+            G.username = username;
+            G.current_user_id = response["user_id"];
+            // update some info ui
+            $("#interviews-username").text(G.username);
+            // navigate
+            Lungo.Router.section("interviews");
+            // loading
+            $scope.interviewsIn("1d");
+        }).fail(function(jqXHR, status){
+            hideNotification();
+            errorAlert(jqXHR, status);
+        });
+    }
     
     // logout
     $scope.letshireLogout = function(){
@@ -371,20 +370,22 @@ function letshireCtrl($scope){
     
     // three entries to trigger the interviews updated.
     $scope.interviewsToday = function(){
+        Lungo.View.Aside.hide("#user-options");
         $scope.interviewsIn("1d");  
     };
     
     $scope.interviewsThisWeek = function(){
+        Lungo.View.Aside.hide("#user-options");
         $scope.interviewsIn("1w");  
     };
     
     $scope.interviewsThisMonth = function(){
+        Lungo.View.Aside.hide("#user-options");
         $scope.interviewsIn("1m");
     };
     
     // get interviews in one 'interval', interval = {'1d', '1w', '1m'}
     $scope.interviewsIn = function(interval){
-        Lungo.View.Aside.hide("#user-options");
         showLoading("");
         $.ajax({
            url: API.interviews(interval),
