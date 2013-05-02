@@ -154,7 +154,8 @@ function errorAlert(jqXHR, status, error_info){
     }else if( status === "abort" ){
         alert(E.abort);
     }else {
-        alert(E.unknown + " : " + jqXHR.responseText);
+		var res = JSON.parse(jqXHR.responseText);
+        alert(res["error"]);
     }
 }
 
