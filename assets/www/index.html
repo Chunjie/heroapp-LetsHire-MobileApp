@@ -91,7 +91,11 @@
         
         <!-- interview page: to show the basic info of the interview and the attachements -->
         <section id="interview">
-            <header data-title="Interview Details" data-back="left blue"></header>
+            <header data-title="Interview Details">
+				<nav>
+					<a href="" ng-click="interviewBack()" data-icon="left"></a>
+				</nav>
+			</header>
             
             <nav class="groupbar">
                 <a href="#interview-article-basic" data-router="article" class="active">
@@ -157,11 +161,15 @@
 
         <!-- feedback page, can give feedback to some specific interview -->
         <section id="feedback">
-            <header data-title="Feedback" data-back="left blue"></header>
+            <header data-title="Feedback">
+				<nav>
+					<a href="" ng-click="feedbackBack()" data-icon="left"></a>
+				</nav>
+			</header>
             <article id="feedback-article" class="active">
                 <div class="form">
                     <fieldset>
-                        <textarea id="feedback-textarea" rows="5" val="{{interview.assessment}}" autofocus></textarea>    
+                        <textarea id="feedback-textarea" rows="5" val="{{interview.assessment}}"></textarea>    
                     </fieldset>
                     <a href="" ng-click="feedbackUpdate(interview.id)" class="button anchor">Save</a>
                 </div>
@@ -170,7 +178,11 @@
         
         <!-- settings page: to configure the server domain and port -->
         <section id="settings">
-            <header data-title="Settings" data-back="left blue"></header>
+            <header data-title="Settings">
+				<nav>
+					<a href="" ng-click="settingsBack()" data-icon="left"></a>	
+				</nav>
+			</header>
             <article id="settings-article" class="active">
                 <div class="form">
                     <fieldset>
@@ -190,7 +202,11 @@
         
         <!-- about page: intro to the team and this app -->
         <section id="about">
-            <header data-title="About" data-back="left blue"></header>
+            <header data-title="About">
+				<nav>
+					<a href="" ng-click="aboutBack()" data-icon="left"></a>
+				</nav> 
+			</header>
             <article id="about-article" class="active">
                 <div>
                     <center><h1>LetsHire Mobile</h1></center>

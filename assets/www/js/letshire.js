@@ -509,6 +509,24 @@ function letshireCtrl($scope){
         })
 	};
 	
+	// some navigator
+	
+	$scope.feedbackBack = function(){
+		Lungo.Router.section("interview");
+	};
+	
+	$scope.interviewBack = function(){
+		Lungo.Router.section("interviews");
+	};
+	
+	$scope.settingsBack = function(){
+		Lungo.Router.section("main");
+	};
+	
+	$scope.aboutBack = function(){
+		Lungo.Router.section("interviews");
+	}
+	
     // attach photo callback
     $scope.attachInterviewPhoto = function(){
         capturePhoto();
