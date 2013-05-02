@@ -329,6 +329,10 @@ function letshireCtrl($scope){
     // the attachments to one specific interview
     $scope.attachments = [];
     
+	$scope.goodlookingTime = function(interview){
+		return readableTime(interview);
+	};
+	
     // login
     $scope.userLogin = function(){
         var username = $("input#main-username").val();
