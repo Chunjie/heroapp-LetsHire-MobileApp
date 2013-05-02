@@ -117,7 +117,7 @@
                     </fieldset>
                     <fieldset data-icon="calendar">
                         <label>Time:</label>
-                        <input id="interview-details-time" type="text" value="{{interview.scheduled_at}}" disabled>
+                        <input id="interview-details-time" type="text" value="{{interview.readableTime}}" disabled>
                     </fieldset>
                     <fieldset data-icon="compass">
                         <label>Location:</label>
@@ -150,7 +150,7 @@
                     <a id="interivew-action" href="" ng-click="changeInterviewStatus(interview.id)" data-icon="compass" ></a>
                     <a id="interview-attach-picture" href="" ng-click="attachInterviewPhoto()" data-icon="picture" ></a>
                     <a id="interview-attach-audio" href="" ng-click="attachInterviewAudio()" data-icon="microphone" ></a>
-                    <a id="interview-feedback" href="#feedback" data-router="section" data-icon="pencil" ></a>
+                    <a id="interview-feedback" href="" ng-click="switchToFeedback()" data-icon="pencil" ></a>
                 </nav>
             </footer>
         </section>
@@ -161,9 +161,9 @@
             <article id="feedback-article" class="active">
                 <div class="form">
                     <fieldset>
-                        <textarea id="feedback-textarea" rows="5" autofocus></textarea>    
+                        <textarea id="feedback-textarea" rows="5" val="{{interview.assessment}}" autofocus></textarea>    
                     </fieldset>
-                    <a href="#" class="button anchor">Save</a>
+                    <a href="" ng-click="feedbackUpdate(interview.id)" class="button anchor">Save</a>
                 </div>
             </article>
         </section>

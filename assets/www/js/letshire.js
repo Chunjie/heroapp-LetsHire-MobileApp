@@ -223,7 +223,7 @@ function win(r) {
     console.log("Response = " + r.response);
     console.log("Sent = " + r.bytesSent);
     hideNotification();
-    alert("Upload successfully and the response is "+r.response + "");
+    //alert("Upload successfully and the response is "+r.response + "");
     //var photoSubUri = r.response.p_id.p.url;
     G.db_shell.transaction(refreshPhotos, _db_error, _db_success);
 }
@@ -238,7 +238,7 @@ function _db_success(){
 
 function fail(error) {
     hideNotification();
-    alert("An error has occurred: Code = " + error.code);
+    //alert("An error has occurred: Code = " + error.code);
     console.log("upload error source " + error.source);
     console.log("upload error target " + error.target);
 }
@@ -269,6 +269,14 @@ function onPhotoURISuccess(imageURI){
 
 function onFail(message){
     alert("Failed : " + message);
+}
+
+// format the datetime string
+function readableTime(interview){
+	var d = new Date(interview.scheduled_at);
+	var date_string = d.toDateString();
+	var time_string = d.toLocaleTimeString();
+	return time_string + " @ " + date_string;
 }
 
 // **************************************
@@ -432,6 +440,7 @@ function letshireCtrl($scope){
             type: "GET"
         }).done(function(response){
             $scope.interview = response["interview"];
+			$scope.interview.readableTime = readableTime($scope.interview);
             $scope.candidate = response["candidate"];
             $scope.opening = response["opening"];
             G.current_interview_id = interviewId;
@@ -459,6 +468,7 @@ function letshireCtrl($scope){
             data: JSON.stringify(form_data)
         }).done(function(response){
             $scope.interview = response["interview"];
+			$scope.interview.readableTime = readableTime($scope.interview);
             $scope.candidate = response["candidate"];
             $scope.opening = response["opening"];
             $scope.$apply();
@@ -469,6 +479,36 @@ function letshireCtrl($scope){
         })
     };
     
+	$scope.switchToFeedback = function(){
+		Lungo.Router.section("feedback");
+		var feedbackInfo = $scope.interview.assessment;
+		$("#feedback-textarea").val(feedbackInfo);
+	};
+	
+	$scope.feedbackUpdate = function(interviewId){
+		var feedbackText = $("#feedback-textarea").val();
+		var form_data = {"interview" : { "assessment" : feedbackText }}
+		showLoading();
+		$.ajax({
+            url: API.interview(interviewId),
+            type: "PUT",
+            dataType: "json",
+            processData: false,
+            contentType: "application/json",
+            data: JSON.stringify(form_data)
+        }).done(function(response){
+            $scope.interview = response["interview"];
+			$scope.interview.readableTime = readableTime($scope.interview);
+            $scope.candidate = response["candidate"];
+            $scope.opening = response["opening"];
+            $scope.$apply();
+            hideNotification();
+        }).fail(function(jqXHR, status){
+            hideNotification();
+            errorAlert(jqXHR, status);
+        })
+	};
+	
     // attach photo callback
     $scope.attachInterviewPhoto = function(){
         capturePhoto();
