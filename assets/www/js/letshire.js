@@ -154,7 +154,8 @@ function errorAlert(jqXHR, status, error_info){
     }else if( status === "abort" ){
         alert(E.abort);
     }else {
-        alert(E.unknown + " : " + jqXHR.responseText);
+		var res = JSON.parse(jqXHR.responseText);
+        alert(res["error"]);
     }
 }
 
@@ -329,6 +330,10 @@ function letshireCtrl($scope){
     // the attachments to one specific interview
     $scope.attachments = [];
     
+	$scope.goodlookingTime = function(interview){
+		return readableTime(interview);
+	};
+	
     // login
     $scope.userLogin = function(){
         var username = $("input#main-username").val();
