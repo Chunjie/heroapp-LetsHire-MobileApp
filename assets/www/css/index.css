@@ -11,3 +11,9 @@
     margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
                                    /* offset horizontal: half of text area width */
 }
+
+/* make sure the attached images fit the screen */
+.attachment-image {
+    width: 100%;
+    height: auto;
+}
