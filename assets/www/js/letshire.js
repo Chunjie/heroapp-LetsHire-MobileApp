@@ -128,7 +128,7 @@ var API = {
 
 function initSettings(){
     if( localStorage.getItem(StorageKey.server) == null ){
-        localStorage.setItem(StorageKey.server, "http://letshire-dev-yuan.cloudfoundry.com");
+        localStorage.setItem(StorageKey.server, "http://letshire-yuan-mobile.cloudfoundry.com");
         localStorage.setItem(StorageKey.port, "80");
     }
 }
@@ -188,6 +188,13 @@ function hideNotification(){
 
 // generic database operator
 
+
+// resume path builder
+function build_resume_path(resume_path){
+	var server_path = localStorage.getItem(StorageKey.server);
+	var token = authPostfix();
+	return server_path  + resume_path + token;
+}
 
 // Generic File Uploader
 function uploadPhoto(imageURI) {
@@ -327,6 +334,7 @@ function letshireCtrl($scope){
     $scope.interview = {};
     $scope.candidate = {};
     $scope.opening = {};
+    $scope.resume = {};
     // the attachments to one specific interview
     $scope.attachments = [];
     
@@ -448,6 +456,7 @@ function letshireCtrl($scope){
 			$scope.interview.readableTime = readableTime($scope.interview);
             $scope.candidate = response["candidate"];
             $scope.opening = response["opening"];
+            $scope.resume = response["resume"];
             G.current_interview_id = interviewId;
             $scope._refreshAttachments(interviewId);
             $scope.$apply();
@@ -472,10 +481,12 @@ function letshireCtrl($scope){
             contentType: "application/json",
             data: JSON.stringify(form_data)
         }).done(function(response){
-            $scope.interview = response["interview"];
-			$scope.interview.readableTime = readableTime($scope.interview);
-            $scope.candidate = response["candidate"];
-            $scope.opening = response["opening"];
+        	$scope.interview.status = new_status;
+            //$scope.interview = response["interview"];
+			//$scope.interview.readableTime = readableTime($scope.interview);
+            //$scope.candidate = response["candidate"];
+            //$scope.opening = response["opening"];
+            //$scope.resume = response["resume"];
             $scope.$apply();
             hideNotification();
         }).fail(function(jqXHR, status){
@@ -502,10 +513,12 @@ function letshireCtrl($scope){
             contentType: "application/json",
             data: JSON.stringify(form_data)
         }).done(function(response){
-            $scope.interview = response["interview"];
-			$scope.interview.readableTime = readableTime($scope.interview);
-            $scope.candidate = response["candidate"];
-            $scope.opening = response["opening"];
+            $scope.interview.assessment = feedbackText;
+        	//$scope.interview = response["interview"];
+			//$scope.interview.readableTime = readableTime($scope.interview);
+            //$scope.candidate = response["candidate"];
+            //$scope.opening = response["opening"];
+            //$scope.resume = response["resume"];
             $scope.$apply();
             hideNotification();
         }).fail(function(jqXHR, status){
@@ -513,6 +526,18 @@ function letshireCtrl($scope){
             errorAlert(jqXHR, status);
         })
 	};
+	
+	// fetch the candidate's resume
+	
+	$scope.downloadResume = function(){
+		if($scope.resume.path == ''){
+			alert('This candidate has not uploaded one resume!');
+		}else{
+			var url = build_resume_path($scope.resume.path);
+			//alert(url);
+			navigator.app.loadUrl(url, {openExternal: true});
+		}
+	}
 	
 	// some navigator
 	
