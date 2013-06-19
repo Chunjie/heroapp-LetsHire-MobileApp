@@ -40,6 +40,9 @@ We use [Lungo.js](http://lungo.tapquo.com/) as the main UI library, refer to thi
 
 refer to this [intro](https://github.com/phonegap/phonegap/wiki/Debugging-in-PhoneGap) to get your hammer
 
+###Architecture Overview
+![Image](architecture.png?raw=true)
+
 ###Project File Structure
 The codes we wrote are in the assets/www/ dir:
 
