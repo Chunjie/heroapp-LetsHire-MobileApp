@@ -40,6 +40,14 @@ We use [Lungo.js](http://lungo.tapquo.com/) as the main UI library, refer to thi
 
 refer to this [intro](https://github.com/phonegap/phonegap/wiki/Debugging-in-PhoneGap) to get your hammer
 
+###Debug on Android phone
+1. Launch Eclipse to open this project.
+2. Make sure USB debugging is enabled on your device and plug it into your system. Information can be found on the [Android Developer Site](http://developer.android.com/tools/device.html).
+3. Right click the project and go to **Run As > Android Application**.
+
+###Architecture Overview
+![Image](architecture.png?raw=true)
+
 ###Project File Structure
 The codes we wrote are in the assets/www/ dir:
 
