@@ -25,12 +25,14 @@ import org.apache.cordova.*;
 public class LetsHire extends DroidGap
 {
     @Override
-    public void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState) /* Android Intent Launcher */
     {
         super.onCreate(savedInstanceState);
         // Set by <content src="index.html" /> in config.xml
+        //
+        // launch web url into WebView which is responsible to do
+        // HTML/CSS rending
         super.loadUrl(Config.getStartUrl());
-        //super.loadUrl("file:///android_asset/www/index.html")
     }
 }
 

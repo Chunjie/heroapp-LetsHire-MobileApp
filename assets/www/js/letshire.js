@@ -61,11 +61,13 @@ var G = {
     db_shell: null
 };
 
+// web service host, ui settings
 var StorageKey = {
     server: "settings-server-key",
     port: "settings-port-key"
 };
 
+// client side local storage to keep interview captured photos
 var DBCONFIG = {
     name: "letshire_db",
     version: "1.0",
@@ -84,6 +86,7 @@ var DBCONFIG = {
 
 G.db_shell = window.openDatabase( DBCONFIG.name, DBCONFIG.version, DBCONFIG.description, DBCONFIG.size );
 
+// global error codes definition
 var E = {
     timeout: "Time out",
     abort: "Abort",
@@ -96,6 +99,7 @@ var E = {
     }
 }
 
+// interview status constants definition
 var STATUS = {
     scheduled: "scheduled",
     started: "started",
@@ -105,6 +109,7 @@ var STATUS = {
 // init the server configuration 
 initSettings();
 
+// Restful Web Service Interfaces
 var API = {
     login: apiPrefix("login"),
     logout: apiPrefix("logout"),
@@ -159,6 +164,7 @@ function errorAlert(jqXHR, status, error_info){
     }
 }
 
+// save ui settings to client side local storage
 function saveSettings(){
     localStorage.setItem(StorageKey.server, $("input#settings-server").val());
     localStorage.setItem(StorageKey.port, $("input#settings-port").val());
@@ -324,6 +330,11 @@ $("#settings-save-button").on("click", function(e){
         errorAlert(jqXHR, status)
     });
 });
+
+/*
+ * Letshire mobile app only does view/update interview and upload interview captured
+ * graphes, other operations should be taken on the PC web browser.
+ */
 
 function letshireCtrl($scope){
     
