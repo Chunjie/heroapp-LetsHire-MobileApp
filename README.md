@@ -7,25 +7,25 @@ With the help of this mobile app, interviewers can take record of interview feed
 
 ###Demonstration
 1. Login view (open app then it will be visible)
-     ![Image](scenario/1.png?raw=true)
+   ![Image](scenario/1.png?raw=true)
 
 2. System settings view
-     ![Image](scenario/2.png?raw=true)
+   ![Image](scenario/2.png?raw=true)
 
 3. User options view
-     ![Image](scenario/3.png?raw=true)
+   ![Image](scenario/3.png?raw=true)
 
 4. Interviews today view
-     ![Image](scenario/4.png?raw=true)
+   ![Image](scenario/4.png?raw=true)
 
 5. Interviews this week view
-     ![Image](scenario/5.png?raw=true)
+   ![Image](scenario/5.png?raw=true)
 
 6. Interviews this month view
-     ![Image](scenario/6.png?raw=true)
+   ![Image](scenario/6.png?raw=true)
 
 7. Interview note view
-     ![Image](scenario/7.png?raw=true)
+   ![Image](scenario/7.png?raw=true)
 
 ###PhoneGap
 1. Getting Started with Android  
