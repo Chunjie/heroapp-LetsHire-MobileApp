@@ -1,5 +1,26 @@
 #heroapp: LetsHire MobileApp
 
+###Overview
+LetsHire MobileApp is the mobile client of LetsHire, which is a hero application for Tempest project. Currently this mobile app only has an Android edition.
+
+With the help of this mobile app, interviewers can take record of interview feedback through his/her phone in real time, what's more, interviewers is able to take photos at the whiteboard which the candidate writes his/her answer on.
+
+###Demonstration
+1. Login view (open app then it will be visible)
+     ![Image](scenario/1.png?raw=true)
+2. System settings view
+     ![Image](scenario/2.png?raw=true)
+3. User options view
+     ![Image](scenario/3.png?raw=true)
+4. Interviews today view
+     ![Image](scenario/4.png?raw=true)
+5. Interviews this week view
+     ![Image](scenario/5.png?raw=true)
+6. Interviews this month view
+     ![Image](scenario/6.png?raw=true)
+7. Interview note view
+     ![Image](scenario/7.png?raw=true)
+
 ###PhoneGap
 1. Getting Started with Android  
      http://docs.phonegap.com/en/2.5.0/guide_gettingstarted_android_index.md.html#Getting%20Started%20with%20Android
