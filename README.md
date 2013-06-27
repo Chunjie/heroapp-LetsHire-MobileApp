@@ -27,8 +27,34 @@ With the help of this mobile app, interviewers can take record of interview feed
 7. Interview details view  
    ![Image](scenario/7.png?raw=true)
 
-8. Take interview note
+8. Take interview note  
    ![Image](scenario/8.png?raw=true)
+
+###Architecture Overview
+Letshire Mobile App is constructed based on PhoneGap, which allows developers to easily create mobile apps using standardized web APIs for the platforms you care about.
+
+####High-Level architecture
+![Image](architecture.png?raw=true)
+
+####Mobile Application Framework
+![Image](MobileAppFramework.png?raw=true)
+
+###Project File Structure
+The codes we wrote are in the assets/www/ dir:
+
+* css/ : css file
+* img/	: the logo or icons
+* js/	: javascript files
+* ~~js/index.js~~ js/letshire.js : our business logic
+* ~~js/jquery.mobile.android-theme.js: jquery mobile android theme~~
+* themes/android-theme.css
+* index.html : app home page, including interviews, interview, settings and other 'pages'
+* ~~interview.html : one interview page~~ 
+* ~~interviews.html : my interviews~~
+* ~~login.html : login page~~
+* ~~settings.html : settings page~~
+*   
+* ~~lets-hire-api-app/ : the fake backend api based on sinatra~~ we will use the real api 
 
 ###PhoneGap
 1. Getting Started with Android  
@@ -74,23 +100,3 @@ refer to this [intro](https://github.com/phonegap/phonegap/wiki/Debugging-in-Pho
 1. Launch Eclipse to open this project.
 2. Make sure USB debugging is enabled on your device and plug it into your system. Information can be found on the [Android Developer Site](http://developer.android.com/tools/device.html).
 3. Right click the project and go to **Run As > Android Application**.
-
-###Architecture Overview
-![Image](architecture.png?raw=true)
-
-###Project File Structure
-The codes we wrote are in the assets/www/ dir:
-
-* css/ : css file
-* img/	: the logo or icons
-* js/	: javascript files
-* ~~js/index.js~~ js/letshire.js : our business logic
-* ~~js/jquery.mobile.android-theme.js: jquery mobile android theme~~
-* themes/android-theme.css
-* index.html : app home page, including interviews, interview, settings and other 'pages'
-* ~~interview.html : one interview page~~ 
-* ~~interviews.html : my interviews~~
-* ~~login.html : login page~~
-* ~~settings.html : settings page~~
-*   
-* ~~lets-hire-api-app/ : the fake backend api based on sinatra~~ we will use the real api 
