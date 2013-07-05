@@ -68,9 +68,7 @@ The codes we wrote are in the assets/www/ dir:
 3. Right click the project and go to **Run As > Android Application**.
 
 ![Image](imgs/phone1.png)
-
 ![Image](imgs/phone2.png)
-
 ![Image](imgs/phone3.png)
 
 ###PhoneGap
