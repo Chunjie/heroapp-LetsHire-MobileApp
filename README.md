@@ -67,9 +67,9 @@ The codes we wrote are in the assets/www/ dir:
 2. Make sure USB debugging is enabled on your device and plug it into your system. Information can be found on the [Android Developer Site](http://developer.android.com/tools/device.html).
 3. Right click the project and go to **Run As > Android Application**.
 
-![Image](imgs/phone1.png)
-![Image](imgs/phone2.png)
-![Image](imgs/phone3.png)
+![Image](imgs/phone1.png) 
+![Image](imgs/phone2.png) 
+![Image](imgs/phone3.png) 
 
 ###PhoneGap
 1. Getting Started with Android  
@@ -97,6 +97,3 @@ We use [Lungo.js](http://lungo.tapquo.com/) as the main UI library, refer to thi
 1. use chrome developer tools to debug the basic feature without phonegap native api.
 2. use [Ripple](https://chrome.google.com/webstore/detail/ripple-emulator-beta/geelfhphabnejjhdalkjhgipohgpdnoc?hl=en) emulator
 3. use [weinre](http://people.apache.org/~pmuellr/weinre/docs/latest/Home.html) to remote debug it
-
-refer to this [intro](https://github.com/phonegap/phonegap/wiki/Debugging-in-PhoneGap) to get your hammer
-
