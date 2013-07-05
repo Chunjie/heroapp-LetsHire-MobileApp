@@ -45,16 +45,14 @@ The codes we wrote are in the assets/www/ dir:
 * css/ : css file
 * img/	: the logo or icons
 * js/	: javascript files
-* ~~js/index.js~~ js/letshire.js : our business logic
-* ~~js/jquery.mobile.android-theme.js: jquery mobile android theme~~
+*
+* js/letshire.js : our business logic
 * themes/android-theme.css
 * index.html : app home page, including interviews, interview, settings and other 'pages'
-* ~~interview.html : one interview page~~ 
-* ~~interviews.html : my interviews~~
-* ~~login.html : login page~~
-* ~~settings.html : settings page~~
-*   
-* ~~lets-hire-api-app/ : the fake backend api based on sinatra~~ we will use the real api 
+  1. interviews list section
+  2. interview detail section
+  2. login section
+  3. system settings settings
 
 ###Run in Emulator
 1. Launch Eclipse to open this project.
@@ -67,9 +65,7 @@ The codes we wrote are in the assets/www/ dir:
 2. Make sure USB debugging is enabled on your device and plug it into your system. Information can be found on the [Android Developer Site](http://developer.android.com/tools/device.html).
 3. Right click the project and go to **Run As > Android Application**.
 
-![Image](imgs/phone1.png) 
-![Image](imgs/phone2.png) 
-![Image](imgs/phone3.png) 
+![Image](imgs/phone1.png) | ![Image](imgs/phone2.png) | ![Image](imgs/phone3.png)
 
 ###PhoneGap
 1. Getting Started with Android  
